@@ -143,10 +143,6 @@
 	status = "okay";
 };
 
-&pxp {
-	status = "okay";
-};
-
 &sai2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sai2>;
@@ -285,15 +281,6 @@
 		>;
 	};
 
-	pinctrl_hog_2: hoggrp-2 {
-		fsl,pins = <
-		MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0
-		MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
-		MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN enable */
-		>;
-	};
-
-
 	pinctrl_enet1: enet1grp {
 		fsl,pins = <
 		MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
@@ -321,14 +308,14 @@
 		>;
 	};
 
-	pinctrl_flexcan1: flexcan1grp{
+	pinctrl_can1: can1grp{
 		fsl,pins = <
 		MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
 		MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
 		>;
 	};
 
-	pinctrl_flexcan2: flexcan2grp{
+	pinctrl_can2: can2grp{
 		fsl,pins = <
 		MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
 		MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
@@ -427,24 +414,6 @@
 		>;
 	};
 
-	pinctrl_tsc: tscgrp {
-		fsl,pins = <
-		MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
-		MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
-		MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
-		MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
-		>;
-	};
-
-	pinctrl_sai1: sai1grp {
-		fsl,pins = <
-		MX6UL_PAD_CSI_DATA05__SAI1_TX_BCLK	0x11088
-		MX6UL_PAD_CSI_DATA04__SAI1_TX_SYNC	0x17088
-		MX6UL_PAD_CSI_DATA06__SAI1_RX_DATA	0x11088
-		MX6UL_PAD_CSI_DATA07__SAI1_TX_DATA	0x11088
-		>;
-	};
-
 	pinctrl_sai2: sai2grp {
 		fsl,pins = <
 		MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
@@ -458,6 +427,19 @@
 	pinctrl_wdog: wdoggrp {
 		fsl,pins = <
 		MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
+		>;
+	};
+};
+
+&iomuxc_snvs {
+	pinctrl-names = "default_snvs";
+	pinctrl-0 = <&pinctrl_hog_2>;
+
+	pinctrl_hog_2: hoggrp-2 {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0
+		MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
+		MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN enable */
 		>;
 	};
 };
