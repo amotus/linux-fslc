@@ -1,0 +1,28 @@
+/*
+ * Copyright (C) 2018 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-vigil.dtsi"
+
+&usdhc1 {
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_usdhc1_cd>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_usdhc1_cd>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_usdhc1_cd>;
+	bus-width = <4>;
+	no-1-8-v;
+	keep-power-in-suspend;
+	enable-sdio-wakeup;
+	cd-gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
+	status = "okay";
+};
+
+&iomuxc {
+	pinctrl_usdhc1_cd: usdhc1-cd-grp {
+		fsl,pins = <
+		MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1	/* SD card detect */
+		>;
+	};
+};

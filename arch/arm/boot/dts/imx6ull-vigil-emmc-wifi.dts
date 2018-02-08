@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 2018 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-vigil.dtsi"
+
+/ {
+	regulators {
+		reg_sd1_vmmc: regulator_sd1_vmmc {
+			compatible = "regulator-fixed";
+			regulator-name = "VSD_3V3";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+			regulator-always-on; /* force VMMC1 to always on so BT can operate independently of Wi-Fi */
+		};
+	};
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2 &pinctrl_snvs_brcm_bt>;
+
+	bluetooth {
+		compatible = "brcm, bcm43438-bt";
+		shutdown-gpios = <&gpio5 4 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&usdhc1 {
+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
+	bus-width = <4>;
+	no-1-8-v; /* removed by u-boot on DART-6UL-5G with Wi-Fi */
+	keep-power-in-suspend;
+	enable-sdio-wakeup;
+	vmmc-supply = <&reg_sd1_vmmc>;
+	non-removable;
+	status = "okay";
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* CYW4343W */
+	brcmf: wifi@1 {
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+	};
+};
+
+&iomuxc {
+	pinctrl_brcm_wifi: brcm-wifi {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO03__REF_CLK_32K	0x03029	/* WLAN Slow Clock */
+		>;
+	};
+};
+
+&iomuxc_snvs {
+	pinctrl_snvs_brcm_bt: snvs-brcm-bt {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
+		>;
+	};
+
+	pinctrl_snvs_brcm_wifi: snvs-brcm-wifi {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN enable (WL_REG_ON) */
+		>;
+	};
+};
