@@ -234,12 +234,6 @@
 };
 
 &iomuxc {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hog>;
-
-	pinctrl_hog: hoggrp {
-	};
-
 	pinctrl_led: ledgrp {
 		fsl,pins = <
 		MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x1b0b0
@@ -399,9 +393,6 @@
 };
 
 &iomuxc_snvs {
-	pinctrl-names = "default_snvs";
-	pinctrl-0 = <&pinctrl_hog>;
-
 	pinctrl_enet1_rst: enet1-rst-grp {
 		fsl,pins = <
 		MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0
