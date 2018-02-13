@@ -25,7 +25,7 @@
 	pinctrl-0 = <&pinctrl_uart2 &pinctrl_snvs_brcm_bt>;
 
 	bluetooth {
-		compatible = "brcm, bcm43438-bt";
+		compatible = "brcm,bcm43438-bt";
 		shutdown-gpios = <&gpio5 4 GPIO_ACTIVE_HIGH>;
 	};
 };
