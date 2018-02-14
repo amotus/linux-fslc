@@ -64,7 +64,7 @@
 &iomuxc_snvs {
 	pinctrl_snvs_brcm_bt: snvs-brcm-bt {
 		fsl,pins = <
-		MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable */
+		MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT Enable (BT_REG_ON) */
 		>;
 	};
 
