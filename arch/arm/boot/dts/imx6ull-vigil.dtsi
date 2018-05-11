@@ -167,7 +167,7 @@
 
 &usbotg1 {
 	/* MFE: otg ? */
-	dr_mode = "otg";
+	dr_mode = "peripheral";
 	disable-over-current;
 	status = "okay";
 };
