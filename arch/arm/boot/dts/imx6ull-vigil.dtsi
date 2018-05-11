@@ -167,7 +167,7 @@
 
 &usbotg1 {
 	/* MFE: otg ? */
-	dr_mode = "host";
+	dr_mode = "otg";
 	disable-over-current;
 	status = "okay";
 };
