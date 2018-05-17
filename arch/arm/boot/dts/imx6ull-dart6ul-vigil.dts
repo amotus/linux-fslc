@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 2018 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-dart6ul-emmc-wifi.dtsi"
+
+/ {
+	model = "FPTechno Vigil Board";
+	compatible = "fptechno,imx6ull-dart6ul-vigil", "fsl,imx6ull";
+
+	sound: sound {
+		status = "okay";
+	};
+};
+
+&fec1 {
+	/* removed pinctrl_enet1_mdio since they conflict with eth2 */
+	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_rst>;
+
+	/delete-node/mdio;
+};
+
+&fec2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_mdio>; /* TODO: &pinctrl_enet2_rst */
+	phy-mode = "rmii";
+	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>; /* TODO */
+	phy-reset-duration = <100>;
+	phy-handle = <&ethphy1>;
+	status = "okay";
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		/* KSZ8081RNB (SoM) */
+		ethphy0: ethernet-phy@1 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			micrel,rmii-reference-clock-select-25-mhz;
+			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+			clock-names = "rmii-ref";
+			reg = <1>;
+		};
+
+		/* KSZ8081RNB (carrier-board) */
+		ethphy1: ethernet-phy@2 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			micrel,rmii-reference-clock-select-25-mhz;
+			clocks = <&clks IMX6UL_CLK_ENET2_REF>;
+			clock-names = "rmii-ref";
+			reg = <2>;
+		};
+	};
+};
+
+&sai2 {
+	status = "okay";
+};
+
+&i2c2 {
+	codec: wm8731@1a {
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_enet2: enet2grp {
+		fsl,pins = <
+		MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+		MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+		MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+		MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+		MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+		MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+		MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+		MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
+		>;
+	};
+
+	pinctrl_enet2_mdio: mdio_enet2_grp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
+		MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
+		>;
+	};
+};

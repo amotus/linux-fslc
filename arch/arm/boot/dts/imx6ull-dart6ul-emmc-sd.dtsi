@@ -4,7 +4,7 @@
 
 /dts-v1/;
 
-#include "imx6ull-vigil.dtsi"
+#include "imx6ull-dart6ul.dtsi"
 
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";

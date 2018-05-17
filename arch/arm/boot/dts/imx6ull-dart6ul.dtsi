@@ -6,8 +6,8 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "FPTechno i.MX6 ULL Vigil System";
-	compatible = "fptechno,imx6ull-vigil", "fsl,imx6ull";
+	model = "Variscite DART-6UL based on i.MX6 ULL";
+	compatible = "variscite,imx6ull-variscite", "fsl,imx6ull";
 
 	chosen {
 		stdout-path = &uart1;
@@ -21,13 +21,6 @@
 		compatible = "simple-bus";
 		#address-cells = <1>;
 		#size-cells = <0>;
-
-		touch_3v3_regulator: touch_3v3_regulator {
-			compatible = "regulator-fixed";
-			regulator-name = "touch_3v3_supply";
-			regulator-always-on;
-			status = "okay";
-		};
 
 		reg_gpio_dvfs: regulator-gpio {
 			compatible = "regulator-gpio";
@@ -50,6 +43,7 @@
 			"Headphone Jack", "RHPOUT",
 			"LLINEIN", "Line Jack",
 			"RLINEIN", "Line Jack";
+		status = "disabled";
 	};
 
 	keys {
@@ -79,16 +73,6 @@
 	assigned-clock-rates = <812851200>;
 };
 
-&clks {
-	/* ref_clk for micrel ethernet phy */
-	rmii_ref_clk: rmii_ref_clk_grp {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <25000000>;
-		clock-output-names = "rmii-ref";
-	};
-};
-
 &fec1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_rst &pinctrl_enet1_mdio>;
@@ -102,13 +86,15 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+		/* KSZ8081RNB (SoM) */
 		ethphy0: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
-			clocks = <&rmii_ref_clk>;
+			clocks = <&clks IMX6UL_CLK_ENET_REF>;
 			clock-names = "rmii-ref";
 			reg = <1>;
 		};
+
 	};
 };
 
@@ -128,12 +114,7 @@
 	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>, <&clks IMX6UL_CLK_SAI2>;
 	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
 	assigned-clock-rates = <0>, <11289600>;
-	status = "okay";
-};
-
-&adc1 {
-	vref-supply = <&touch_3v3_regulator>;
-	status = "okay";
+	status = "disabled";
 };
 
 /* debug uart */
@@ -207,17 +188,7 @@
 		reg = <0x1a>;
 		clocks = <&clks IMX6UL_CLK_SAI2>;
 		clock-names = "mclk";
-	};
-
-	ft5x06_ts@38 {
-		compatible = "edt,edt-ft5x06";
-		reg = <0x38>;
-		interrupt-parent = <&gpio3>;
-		interrupts = <4 0>;
-		touchscreen-size-x = <800>;
-		touchscreen-size-y = <480>;
-		touchscreen-inverted-x;
-		touchscreen-inverted-y;
+		status = "disabled";
 	};
 
 	/* DS1307 RTC module */
@@ -257,18 +228,12 @@
 		>;
 	};
 
-	pinctrl_enet1_mdio: enet1-mdiogrp {
+	pinctrl_enet1_mdio: mdio_enet1_grp {
 		fsl,pins = <
 		MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
 		MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
 		>;
 	};
-
-	/*
-	 * There is a pin conflict between fec1 and fec2, both use the
-	 * GPIO1_IO06 and GPIO1_IO07 pins for MDIO and MDC (resp.). Specify
-	 * them only for ENET1 (fec1) to workaround the issue.
-	 */
 
 	pinctrl_can1: can1grp{
 		fsl,pins = <
