@@ -1,0 +1,12 @@
+/*
+ * Copyright (C) 2018 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-dart6ul-emmc-wifi.dtsi"
+
+/ {
+	model = "IDE Systems Board";
+	compatible = "ide,imx6ull-dart6ul-ide", "fsl,imx6ull";
+};
