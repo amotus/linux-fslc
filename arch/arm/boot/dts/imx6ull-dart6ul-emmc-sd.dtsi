@@ -2,8 +2,6 @@
  * Copyright (C) 2018 Amotus Solutions, Inc.
  */
 
-/dts-v1/;
-
 #include "imx6ull-dart6ul.dtsi"
 
 &usdhc1 {
