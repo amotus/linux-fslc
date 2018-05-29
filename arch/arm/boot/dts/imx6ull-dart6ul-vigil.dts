@@ -39,7 +39,7 @@
 		ethphy0: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
-			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+			clocks = <&rmii_refclk>;
 			clock-names = "rmii-ref";
 			reg = <1>;
 		};
@@ -48,7 +48,8 @@
 		ethphy1: ethernet-phy@2 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			micrel,rmii-reference-clock-select-25-mhz;
-			clocks = <&clks IMX6UL_CLK_ENET2_REF>;
+			/* TODO: external oscillator or IMX ENET2 REF CLOCK? */
+			clocks = <&rmii_refclk>;
 			clock-names = "rmii-ref";
 			reg = <2>;
 		};
