@@ -2,8 +2,7 @@
  * Copyright (C) 2018 Amotus Solutions, Inc.
  */
 
-#include "imx6ull-dart6ul.dtsi"
-
+/* uSD */
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_usdhc1_cd>;
@@ -12,8 +11,17 @@
 	bus-width = <4>;
 	no-1-8-v;
 	keep-power-in-suspend;
-	enable-sdio-wakeup;
 	cd-gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
+	status = "okay";
+};
+
+/* eMMC */
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	no-1-8-v;
+	non-removable;
+	keep-power-in-suspend;
 	status = "okay";
 };
 

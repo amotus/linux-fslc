@@ -2,25 +2,29 @@
  * Copyright (C) 2018 Amotus Solutions, Inc.
  */
 
-#include "imx6ull-dart6ul.dtsi"
-
 / {
 	regulators {
-		reg_sd1_vmmc: regulator_sd1_vmmc {
+		compatible = "simple-bus";
+
+		reg_3v3: regulator-3v3 {
 			compatible = "regulator-fixed";
 			regulator-name = "VSD_3V3";
 			regulator-min-microvolt = <3300000>;
 			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-			enable-active-high;
-			regulator-always-on; /* force VMMC1 to always on so BT can operate independently of Wi-Fi */
 		};
+	};
+
+	usdhc1_pwrseq: usdhc1-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&gpio5 6 GPIO_ACTIVE_LOW>;
 	};
 };
 
 &uart2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart2 &pinctrl_snvs_brcm_bt>;
+	uart-has-rtscts;
+	status = "okay";
 
 	bluetooth {
 		compatible = "brcm,bcm43438-bt";
@@ -33,12 +37,10 @@
 	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
 	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
 	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_brcm_wifi &pinctrl_snvs_brcm_wifi>;
-	bus-width = <4>;
-	no-1-8-v; /* removed by u-boot on DART-6UL-5G with Wi-Fi */
-	keep-power-in-suspend;
-	enable-sdio-wakeup;
-	vmmc-supply = <&reg_sd1_vmmc>;
+	no-1-8-v;
 	non-removable;
+	mmc-pwrseq = <&usdhc1_pwrseq>;
+	vmmc-supply = <&reg_3v3>;
 	status = "okay";
 
 	#address-cells = <1>;
@@ -46,12 +48,31 @@
 
 	/* CYW4343W */
 	brcmf: wifi@1 {
-		reg = <1>;
 		compatible = "brcm,bcm4329-fmac";
+		reg = <1>;
 	};
 };
 
+/* eMMC */
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	no-1-8-v;
+	non-removable;
+	keep-power-in-suspend;
+	status = "okay";
+};
+
 &iomuxc {
+	pinctrl_uart2: uart2grp {
+		fsl,pins = <
+		MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
+		MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
+		MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
+		MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
+		>;
+	};
+
 	pinctrl_brcm_wifi: brcm-wifi {
 		fsl,pins = <
 		MX6UL_PAD_GPIO1_IO03__REF_CLK_32K	0x03029	/* WLAN Slow Clock */
@@ -68,7 +89,7 @@
 
 	pinctrl_snvs_brcm_wifi: snvs-brcm-wifi {
 		fsl,pins = <
-		MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x03029	/* WLAN enable (WL_REG_ON) */
+		MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0	/* WLAN enable (WL_REG_ON) */
 		>;
 	};
 };
