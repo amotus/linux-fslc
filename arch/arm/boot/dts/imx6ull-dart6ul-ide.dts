@@ -79,6 +79,627 @@
 	};
 };
 
+&i2c1 {
+	/* breaker status 1-16 */
+	ioexpander1: ioexpander@20 {
+		compatible = "microchip,mcp23017";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x20>;
+
+		interrupt-parent = <&gpio2>;
+		interrupts = <14 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		microchip,irq-mirror;
+
+		status1 {
+			gpio-hog;
+			gpios = <1 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status1";
+		};
+
+		status2 {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status2";
+		};
+
+		status3 {
+			gpio-hog;
+			gpios = <3 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status3";
+		};
+
+		status4 {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status4";
+		};
+
+		status5 {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status5";
+		};
+
+		status6 {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status6";
+		};
+
+		status7 {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status7";
+		};
+
+		status8 {
+			gpio-hog;
+			gpios = <8 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status8";
+		};
+
+		status9 {
+			gpio-hog;
+			gpios = <9 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status9";
+		};
+
+		status10 {
+			gpio-hog;
+			gpios = <10 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status10";
+		};
+
+		status11 {
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status11";
+		};
+
+		status12 {
+			gpio-hog;
+			gpios = <12 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status12";
+		};
+
+		status13 {
+			gpio-hog;
+			gpios = <13 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status13";
+		};
+
+		status14 {
+			gpio-hog;
+			gpios = <14 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status14";
+		};
+
+		status15 {
+			gpio-hog;
+			gpios = <15 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status15";
+		};
+
+		status16 {
+			gpio-hog;
+			gpios = <16 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status16";
+		};
+	};
+
+	/* breaker status 17-32 */
+	ioexpander2: ioexpander@21 {
+		compatible = "microchip,mcp23017";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x21>;
+
+		interrupt-parent = <&gpio2>;
+		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		microchip,irq-mirror;
+
+		status17 {
+			gpio-hog;
+			gpios = <1 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status17";
+		};
+
+		status18 {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status18";
+		};
+
+		status19 {
+			gpio-hog;
+			gpios = <3 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status19";
+		};
+
+		status20 {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status20";
+		};
+
+		status21 {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status21";
+		};
+
+		status22 {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status22";
+		};
+
+		status23 {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status23";
+		};
+
+		status24 {
+			gpio-hog;
+			gpios = <8 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status24";
+		};
+
+		status25 {
+			gpio-hog;
+			gpios = <9 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status25";
+		};
+
+		status26 {
+			gpio-hog;
+			gpios = <10 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status26";
+		};
+
+		status27 {
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status27";
+		};
+
+		status28 {
+			gpio-hog;
+			gpios = <12 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status28";
+		};
+
+		status29 {
+			gpio-hog;
+			gpios = <13 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status29";
+		};
+
+		status30 {
+			gpio-hog;
+			gpios = <14 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status30";
+		};
+
+		status31 {
+			gpio-hog;
+			gpios = <15 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status31";
+		};
+
+		status32 {
+			gpio-hog;
+			gpios = <16 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "status32";
+		};
+	};
+
+	/* contactor control 1-16 */
+	ioexpander3: ioexpander@22 {
+		compatible = "microchip,mcp23017";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x22>;
+
+		ctrl1 {
+			gpio-hog;
+			gpios = <1 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl1";
+		};
+
+		ctrl2 {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl2";
+		};
+
+		ctrl3 {
+			gpio-hog;
+			gpios = <3 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl3";
+		};
+
+		ctrl4 {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl4";
+		};
+
+		ctrl5 {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl5";
+		};
+
+		ctrl6 {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl6";
+		};
+
+		ctrl7 {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl7";
+		};
+
+		ctrl8 {
+			gpio-hog;
+			gpios = <8 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl8";
+		};
+
+		ctrl9 {
+			gpio-hog;
+			gpios = <9 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl9";
+		};
+
+		ctrl10 {
+			gpio-hog;
+			gpios = <10 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl10";
+		};
+
+		ctrl11 {
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl11";
+		};
+
+		ctrl12 {
+			gpio-hog;
+			gpios = <12 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl12";
+		};
+
+		ctrl13 {
+			gpio-hog;
+			gpios = <13 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl13";
+		};
+
+		ctrl14 {
+			gpio-hog;
+			gpios = <14 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl14";
+		};
+
+		ctrl15 {
+			gpio-hog;
+			gpios = <15 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl15";
+		};
+
+		ctrl16 {
+			gpio-hog;
+			gpios = <16 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl16";
+		};
+	};
+
+	/* contactor control 17-32 */
+	ioexpander4: ioexpander@23 {
+		compatible = "microchip,mcp23017";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x23>;
+
+		ctrl17 {
+			gpio-hog;
+			gpios = <1 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl17";
+		};
+
+		ctrl18 {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl18";
+		};
+
+		ctrl19 {
+			gpio-hog;
+			gpios = <3 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl19";
+		};
+
+		ctrl20 {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl20";
+		};
+
+		ctrl21 {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl21";
+		};
+
+		ctrl22 {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl22";
+		};
+
+		ctrl23 {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl23";
+		};
+
+		ctrl24 {
+			gpio-hog;
+			gpios = <8 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl24";
+		};
+
+		ctrl25 {
+			gpio-hog;
+			gpios = <9 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl25";
+		};
+
+		ctrl26 {
+			gpio-hog;
+			gpios = <10 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl26";
+		};
+
+		ctrl27 {
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl27";
+		};
+
+		ctrl28 {
+			gpio-hog;
+			gpios = <12 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl28";
+		};
+
+		ctrl29 {
+			gpio-hog;
+			gpios = <13 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl29";
+		};
+
+		ctrl30 {
+			gpio-hog;
+			gpios = <14 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl30";
+		};
+
+		ctrl31 {
+			gpio-hog;
+			gpios = <15 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl31";
+		};
+
+		ctrl32 {
+			gpio-hog;
+			gpios = <16 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "ctrl32";
+		};
+	};
+
+	/* relay and output switches */
+	ioexpander5: ioexpander@24 {
+		compatible = "microchip,mcp23017";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x24>;
+
+		interrupt-parent = <&gpio2>;
+		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		microchip,irq-mirror;
+
+		relay1 {
+			gpio-hog;
+			gpios = <1 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay1";
+		};
+
+		relay2 {
+			gpio-hog;
+			gpios = <2 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay2";
+		};
+
+		relay3 {
+			gpio-hog;
+			gpios = <3 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay3";
+		};
+
+		relay4 {
+			gpio-hog;
+			gpios = <4 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay4";
+		};
+
+		relay5 {
+			gpio-hog;
+			gpios = <5 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay5";
+		};
+
+		relay6 {
+			gpio-hog;
+			gpios = <6 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay6";
+		};
+
+		relay7 {
+			gpio-hog;
+			gpios = <7 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay7";
+		};
+
+		relay8 {
+			gpio-hog;
+			gpios = <8 GPIO_ACTIVE_HIGH>;
+			output-high;
+			line-name = "relay8";
+		};
+
+		switch1 {
+			gpio-hog;
+			gpios = <9 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch1";
+		};
+
+		switch2 {
+			gpio-hog;
+			gpios = <10 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch2";
+		};
+
+		switch3 {
+			gpio-hog;
+			gpios = <11 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch3";
+		};
+
+		switch4 {
+			gpio-hog;
+			gpios = <12 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch4";
+		};
+
+		switch5 {
+			gpio-hog;
+			gpios = <13 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch5";
+		};
+
+		switch6 {
+			gpio-hog;
+			gpios = <14 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch6";
+		};
+
+		switch7 {
+			gpio-hog;
+			gpios = <15 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch7";
+		};
+
+		switch8 {
+			gpio-hog;
+			gpios = <16 GPIO_ACTIVE_HIGH>;
+			input;
+			line-name = "switch8";
+		};
+
+	};
+};
+
 &i2c2 {
 	rtc: mcp7940x@6f {
 		compatible = "microchip,mcp7940x";
@@ -163,27 +784,6 @@
 };
 
 &gpio2 {
-	cb_int0 {
-		gpio-hog;
-		gpios = <14 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_INT0";
-	};
-
-	cb_int1 {
-		gpio-hog;
-		gpios = <8 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_INT1";
-	};
-
-	cb_int2 {
-		gpio-hog;
-		gpios = <9 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_INT2";
-	};
-
 	cb_rst {
 		gpio-hog;
 		gpios = <13 GPIO_ACTIVE_HIGH>;
