@@ -60,6 +60,7 @@
 	no-1-8-v;
 	non-removable;
 	keep-power-in-suspend;
+	bus-width = <8>;
 	status = "okay";
 };
 
