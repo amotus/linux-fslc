@@ -56,27 +56,6 @@
 		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
 		status = "okay";
 	};
-
-	/* control board id: 0, 1 or 2. 3 means missing board. */
-	gpio-decoder-cbid {
-		compatible = "gpio-decoder";
-		gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>, <&gpio2 10 GPIO_ACTIVE_HIGH>;
-		decoder-max-value = <3>;
-	};
-
-	/* meter board id: 0, 1 or 2. 3 means missing board. */
-	gpio-decoder-meterid {
-		compatible = "gpio-decoder";
-		gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>, <&gpio2 12 GPIO_ACTIVE_HIGH>;
-		decoder-max-value = <3>;
-	};
-
-	/* modbus address of the meter board */
-	gpio-decoder-modbus-addr {
-		compatible = "gpio-decoder";
-		gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>, <&gpio1 14 GPIO_ACTIVE_HIGH>;
-		decoder-max-value = <3>;
-	};
 };
 
 &i2c1 {
@@ -781,6 +760,34 @@
 		output-low;
 		line-name = "METER_RST";
 	};
+
+	meter_id0 {
+		gpio-hog;
+		gpios = <12 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "METER_ID0";
+	};
+
+	meter_id1 {
+		gpio-hog;
+		gpios = <13 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "METER_ID1";
+	};
+
+	meter_adr0 {
+		gpio-hog;
+		gpios = <14 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "METER_ADR0";
+	};
+
+	meter_adr1 {
+		gpio-hog;
+		gpios = <15 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "METER_ADR1";
+	};
 };
 
 &gpio2 {
@@ -803,6 +810,20 @@
 		gpios = <15 GPIO_ACTIVE_HIGH>;
 		input;
 		line-name = "CB_GPIOB";
+	};
+
+	cb_id0 {
+		gpio-hog;
+		gpios = <10 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_ID0";
+	};
+
+	cb_id1 {
+		gpio-hog;
+		gpios = <11 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_ID1";
 	};
 };
 
