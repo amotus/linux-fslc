@@ -551,18 +551,12 @@
 		};
 	};
 
-	/* relay and output switches */
+	/* relay */
 	ioexpander5: ioexpander@24 {
-		compatible = "microchip,mcp23017";
+		compatible = "microchip,mcp23008";
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x24>;
-
-		interrupt-parent = <&gpio2>;
-		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
-		interrupt-controller;
-		#interrupt-cells = <2>;
-		microchip,irq-mirror;
 
 		relay1 {
 			gpio-hog;
@@ -619,6 +613,19 @@
 			output-high;
 			line-name = "relay8";
 		};
+	};
+
+	/* switch */
+	ioexpander6: ioexpander6@25 {
+		compatible = "microchip,mcp23008";
+		gpio-controller;
+		#gpio-cells = <2>;
+		reg = <0x25>;
+
+		interrupt-parent = <&gpio2>;
+		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
 
 		switch1 {
 			gpio-hog;
@@ -675,7 +682,6 @@
 			input;
 			line-name = "switch8";
 		};
-
 	};
 };
 
