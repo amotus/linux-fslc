@@ -188,11 +188,8 @@
 &usbotg1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usbotg1>;
-	dr_mode = "otg";
+	dr_mode = "peripheral";
 	status = "okay";
-	/* dr_mode = "host"; */
-	/* disable-over-current; */
-	/* status = "okay"; */
 };
 
 &usbotg2 {
@@ -208,11 +205,12 @@
 	/* 	line-name = "GPS_PWR_EN"; */
 	/* }; */
 
-	/* meter_rst { */
-	/* 	gpios = <11 GPIO_ACTIVE_LOW>; */
-	/* 	output-low; */
-	/* 	line-name = "METER_RST"; */
-	/* }; */
+	meter_rst {
+		gpios = <11 GPIO_ACTIVE_LOW>;
+		gpio-hog;
+		output-low;
+		line-name = "METER_RST";
+	};
 
 	meter_id0 {
 		gpios = <12 GPIO_ACTIVE_HIGH>;
@@ -236,6 +234,30 @@
 		gpios = <15 GPIO_ACTIVE_HIGH>;
 		input;
 		line-name = "METER_ADR1";
+	};
+
+	cb_gpioc {
+		gpios = <6 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_GPIOC";
+	};
+
+	cb_gpiod {
+		gpios = <7 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_GPIOD";
+	};
+
+	cb_gpioe {
+		gpios = <5 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_GPIOE";
+	};
+
+	cb_gpiof {
+		gpios = <0 GPIO_ACTIVE_HIGH>;
+		input;
+		line-name = "CB_GPIOF";
 	};
 };
 
@@ -327,6 +349,10 @@
 		MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13      0x1b0b0 /* CB_RST */
 		MX6UL_PAD_ENET2_TX_CLK__GPIO2_IO14     0x1b0b0 /* CB_INT0 */
 		MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15      0x1b0b0 /* CB_GPIOB */
+		MX6UL_PAD_GPIO1_IO06__GPIO1_IO06       0x1b0b0 /* CB_GPIOC */
+		MX6UL_PAD_GPIO1_IO07__GPIO1_IO07       0x1b0b0 /* CB_GPIOD */
+		MX6UL_PAD_GPIO1_IO05__GPIO1_IO05       0x1b0b0 /* CB_GPIOE */
+		MX6UL_PAD_GPIO1_IO00__GPIO1_IO00       0x1b0b0 /* CB_GPIOF */
 		/* Meter gpios */
 		MX6UL_PAD_JTAG_TMS__GPIO1_IO11	       0x1b0b0 /* METER_RSTn */
 		MX6UL_PAD_JTAG_TDO__GPIO1_IO12	       0x1b0b0 /* METER_ID_B0 */
@@ -393,6 +419,7 @@
 		fsl,pins = <
 		MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
 		MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1
+		/* TODO: Connect both RTS and CTS */
 		/* MX6UL_PAD_LCD_VSYNC__UART4_DCE_RTS	0x1b0b1 */
 		MX6UL_PAD_LCD_VSYNC__GPIO3_IO03         0x1b0b1
 		>;
@@ -402,6 +429,7 @@
 		fsl,pins = <
 		MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1
 		MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1
+		/* TODO: Connect both RTS and CTS */
 		/* MX6UL_PAD_CSI_DATA02__UART5_DCE_RTS	0x1b0b1 */
 		MX6UL_PAD_CSI_DATA02__GPIO4_IO23        0x1b0b1
 		>;
