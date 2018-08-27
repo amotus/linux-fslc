@@ -236,17 +236,17 @@
 		line-name = "METER_ADR1";
 	};
 
-	cb_gpioc {
-		gpios = <6 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOC";
-	};
+	/* cb_gpioc { */
+	/* 	gpios = <6 GPIO_ACTIVE_HIGH>; */
+	/* 	input; */
+	/* 	line-name = "CB_GPIOC"; */
+	/* }; */
 
-	cb_gpiod {
-		gpios = <7 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOD";
-	};
+	/* cb_gpiod { */
+	/* 	gpios = <7 GPIO_ACTIVE_HIGH>; */
+	/* 	input; */
+	/* 	line-name = "CB_GPIOD"; */
+	/* }; */
 
 	cb_gpioe {
 		gpios = <5 GPIO_ACTIVE_HIGH>;
@@ -323,7 +323,7 @@
 /* &gpio5 { */
 /* 	xbee_rst { */
 /* 		gpios = <8 GPIO_ACTIVE_LOW>; */
-/* 		output-high; */
+/* 		output-low; */
 /* 		line-name = "XBEE_RST"; */
 /* 	}; */
 
@@ -349,8 +349,8 @@
 		MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13      0x1b0b0 /* CB_RST */
 		MX6UL_PAD_ENET2_TX_CLK__GPIO2_IO14     0x1b0b0 /* CB_INT0 */
 		MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15      0x1b0b0 /* CB_GPIOB */
-		MX6UL_PAD_GPIO1_IO06__GPIO1_IO06       0x1b0b0 /* CB_GPIOC */
-		MX6UL_PAD_GPIO1_IO07__GPIO1_IO07       0x1b0b0 /* CB_GPIOD */
+		/* MX6UL_PAD_GPIO1_IO06__GPIO1_IO06       0x1b0b0 /\* CB_GPIOC *\/ */
+		/* MX6UL_PAD_GPIO1_IO07__GPIO1_IO07       0x1b0b0 /\* CB_GPIOD *\/ */
 		MX6UL_PAD_GPIO1_IO05__GPIO1_IO05       0x1b0b0 /* CB_GPIOE */
 		MX6UL_PAD_GPIO1_IO00__GPIO1_IO00       0x1b0b0 /* CB_GPIOF */
 		/* Meter gpios */
