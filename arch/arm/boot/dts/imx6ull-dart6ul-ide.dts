@@ -199,140 +199,56 @@
 };
 
 &gpio1 {
-	/* gps_pwr_en { */
-	/* 	gpios = <10 GPIO_ACTIVE_LOW>; */
-	/* 	output-low; */
-	/* 	line-name = "GPS_PWR_EN"; */
-	/* }; */
+	gpio-line-names = "CB_GPIOF", "", "", "", "", "CB_GPIOE", "", "",
+	"", "", "", "METER_RST", "METER_ID0", "METER_ID1", "METER_ADR0", "METER_ADR1",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
 
 	meter_rst {
 		gpios = <11 GPIO_ACTIVE_LOW>;
 		gpio-hog;
 		output-low;
-		line-name = "METER_RST";
-	};
-
-	meter_id0 {
-		gpios = <12 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_ID0";
-	};
-
-	meter_id1 {
-		gpios = <13 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_ID1";
-	};
-
-	meter_adr0 {
-		gpios = <14 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_ADR0";
-	};
-
-	meter_adr1 {
-		gpios = <15 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_ADR1";
-	};
-
-	/* cb_gpioc { */
-	/* 	gpios = <6 GPIO_ACTIVE_HIGH>; */
-	/* 	input; */
-	/* 	line-name = "CB_GPIOC"; */
-	/* }; */
-
-	/* cb_gpiod { */
-	/* 	gpios = <7 GPIO_ACTIVE_HIGH>; */
-	/* 	input; */
-	/* 	line-name = "CB_GPIOD"; */
-	/* }; */
-
-	cb_gpioe {
-		gpios = <5 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOE";
-	};
-
-	cb_gpiof {
-		gpios = <0 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOF";
 	};
 };
 
 &gpio2 {
+	gpio-line-names = "", "", "", "", "", "", "", "",
+	"", "", "CB_ID0", "CB_ID1", "CB_GPIOA", "CB_RST", "", "CB_GPIOB",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
+
 	cb_rst {
 		gpios = <13 GPIO_ACTIVE_LOW>;
 		gpio-hog;
 		output-low;
-		line-name = "CB_RST";
-	};
-
-	cb_gpioa {
-		gpios = <12 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOA";
-	};
-
-	cb_gpiob {
-		gpios = <15 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_GPIOB";
-	};
-
-	cb_id0 {
-		gpios = <10 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_ID0";
-	};
-
-	cb_id1 {
-		gpios = <11 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "CB_ID1";
 	};
 };
 
 &gpio4 {
-	meter_pc7 {
-		gpios = <25 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_PC7";
-	};
-
-	meter_pc8 {
-		gpios = <26 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_PC8";
-	};
-
-	meter_pc9 {
-		gpios = <28 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_PC9";
-	};
-
-	meter_pc10 {
-		gpios = <27 GPIO_ACTIVE_HIGH>;
-		input;
-		line-name = "METER_PC10";
-	};
+	gpio-line-names = "", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "METER_PC7", "METER_PC8", "METER_PC10", "METER_PC9", "", "", "";
 };
 
-/* &gpio5 { */
-/* 	xbee_rst { */
-/* 		gpios = <8 GPIO_ACTIVE_LOW>; */
-/* 		output-low; */
-/* 		line-name = "XBEE_RST"; */
-/* 	}; */
+&gpio5 {
+	gpio-line-name = "", "", "", "", "", "", "", "",
+	"XBEE_RST", "XBEE_SLEEP", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
 
-/* 	xbee_sleep { */
-/* 		gpios = <9 GPIO_ACTIVE_LOW>; */
-/* 		output-low; */
-/* 		line-name = "XBEE_SLEEP"; */
-/* 	}; */
-/* }; */
+	xbee_rst {
+		gpios = <8 GPIO_ACTIVE_LOW>;
+		gpio-hog;
+		output-low;
+	};
+
+	xbee_sleep {
+		gpios = <9 GPIO_ACTIVE_LOW>;
+		gpio-hog;
+		output-low;
+	};
+};
 
 &iomuxc {
 	pinctrl-names = "default";
@@ -444,6 +360,9 @@
 };
 
 &iomuxc_snvs {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_xbee>;
+
 	pinctrl_led2: ledgrp {
 		fsl,pins = <
 		MX6ULL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* External green led */
