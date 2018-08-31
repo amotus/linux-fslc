@@ -78,7 +78,7 @@
 
 	pinctrl_brcm_wifi: brcm-wifi {
 		fsl,pins = <
-		MX6UL_PAD_GPIO1_IO03__REF_CLK_32K	0x03029	/* WLAN Slow Clock */
+		MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x03029	/* WLAN Slow Clock */
 		>;
 	};
 };
