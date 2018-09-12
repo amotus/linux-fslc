@@ -26,26 +26,26 @@
 			label = "external:green:heartbeat";
 			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
-			default-state = "off";
+			default-state = "on";
 		};
 
 		led2 {
 			label = "external:red:fault";
 			gpios = <&gpio5 3 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
+			default-state = "on";
 		};
 
 		led3 {
 			label = "internal:green:heartbeat";
 			gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "hearbeat";
-			default-state = "off";
+			default-state = "on";
 		};
 
 		led4 {
 			label = "internal:red:fault";
 			gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
+			default-state = "on";
 		};
 	};
 
