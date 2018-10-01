@@ -203,12 +203,6 @@
 	"", "", "", "METER_RST", "METER_ID0", "METER_ID1", "METER_ADR0", "METER_ADR1",
 	"", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "";
-
-	meter_rst {
-		gpios = <11 GPIO_ACTIVE_LOW>;
-		gpio-hog;
-		output-low;
-	};
 };
 
 &gpio2 {
