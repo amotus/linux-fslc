@@ -234,7 +234,7 @@
 	xbee_sleep {
 		gpios = <9 GPIO_ACTIVE_LOW>;
 		gpio-hog;
-		output-low;
+		input;
 	};
 };
 
