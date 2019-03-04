@@ -138,6 +138,12 @@
 		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
 		#thermal-sensor-cells = <0>;
 	};
+
+	boardid: eeprom@50 {
+		compatible = "rohm,br24g04", "atmel,24c04";
+		pagesize = <16>;
+		reg = <0x50>;
+	};
 };
 
 /* ttymxc0 - debug uart */
