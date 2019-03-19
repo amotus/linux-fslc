@@ -19,6 +19,9 @@
 	};
 
 	regulators {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_regulators>;
+
 		compatible = "simple-bus";
 		#address-cells = <1>;
 		#size-cells = <0>;
