@@ -294,16 +294,24 @@
 	imx6dl-seco-cs962revd {
 		pinctrl_hog: hoggrp {
 			fsl,pins = <
-			/*  LVDS  */
-			MX6QDL_PAD_GPIO_4__GPIO1_IO04                0x1f071
+			MX6QDL_PAD_NANDF_D7__GPIO2_IO07              0x1f071 /* ectrl irq */
+			MX6QDL_PAD_NANDF_D4__GPIO2_IO04              0x1f071 /* power msp430 */
+			MX6QDL_PAD_SD1_DAT0__GPIO1_IO16              0x1f071 /* GPIO0 (pin 185) */
+			MX6QDL_PAD_SD1_DAT1__GPIO1_IO17              0x1f071 /* GPIO1 (pin 186) */
+			MX6QDL_PAD_SD1_DAT2__GPIO1_IO19              0x1f071 /* GPIO2 (pin 187) */
+			MX6QDL_PAD_SD1_DAT3__GPIO1_IO21              0x1f071 /* GPIO3 (pin 188) */
+			MX6QDL_PAD_SD1_CLK__GPIO1_IO20               0x1f071 /* GPIO4 (pin 189) */
+			MX6QDL_PAD_SD1_CMD__GPIO1_IO18               0x1f071 /* GPIO5 (pin 190) */
+			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14             0x1f071 /* GPIO6 (pin 191) */
+			MX6QDL_PAD_NANDF_CS2__GPIO6_IO15             0x1f071 /* GPIO7 (pin 192) */
+			>;
+		};
+
+		pinctrl_regulators: regulatorsgrp {
+			fsl,pins = <
 			MX6QDL_PAD_GPIO_2__GPIO1_IO02                0x1f071
-			/*  USB  */
 			MX6QDL_PAD_EIM_D22__GPIO3_IO22               0x1f071
 			MX6QDL_PAD_GPIO_17__GPIO7_IO12               0x1f071
-			/*  ECTRL INTERRUPT  */
-			MX6QDL_PAD_NANDF_D7__GPIO2_IO07              0x1f071
-			/*  PWR EMBEDDED CONTROLLER  */
-			MX6QDL_PAD_NANDF_D4__GPIO2_IO04              0x1f071
 			>;
 		};
 
