@@ -139,10 +139,10 @@
 		#thermal-sensor-cells = <0>;
 	};
 
-	boardid: eeprom@50 {
+	boardid: eeprom@52 {
 		compatible = "rohm,br24g04", "atmel,24c04";
 		pagesize = <16>;
-		reg = <0x50>;
+		reg = <0x52>;
 	};
 };
 
