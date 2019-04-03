@@ -2,8 +2,6 @@
  * Copyright (C) 2018 Amotus Solutions, Inc.
  */
 
-/dts-v1/;
-
 #include "imx6ull-dart6ul.dtsi"
 #include "imx6ull-dart6ul-emmc-wifi.dtsi"
 #include "imx6ull-dart6ul-ethernet.dtsi"
@@ -138,15 +136,9 @@
 		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
 		#thermal-sensor-cells = <0>;
 	};
-
-	boardid: eeprom@52 {
-		compatible = "rohm,br24g04", "atmel,24c04";
-		pagesize = <16>;
-		reg = <0x52>;
-	};
 };
 
-/* ttymxc0 - debug uart */
+/* ttymxc0 uart - debug uart */
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
@@ -168,8 +160,6 @@
 	pinctrl-0 = <&pinctrl_uart4>;
 	linux,rs485-enabled-at-boot-time;
 	rts-gpios = <&gpio3 3 GPIO_ACTIVE_HIGH>;
-	/* uart-has-rtscts; */
-	/* fsl,dte-mode; */
 	status = "okay";
 };
 
@@ -179,8 +169,6 @@
 	pinctrl-0 = <&pinctrl_uart5>;
 	linux,rs485-enabled-at-boot-time;
 	rts-gpios = <&gpio4 23 GPIO_ACTIVE_HIGH>;
-	/* uart-has-rtscts; */
-	/* fsl,dte-mode; */
 	status = "okay";
 };
 
@@ -190,6 +178,27 @@
 	pinctrl-0 = <&pinctrl_uart6>;
 	status = "okay";
 };
+
+/* DTE mode */
+/* /\* ttymxc3 uart - rs485-1 *\/ */
+/* &uart4 { */
+/* 	pinctrl-names = "default"; */
+/* 	pinctrl-0 = <&pinctrl_uart4>; */
+/* 	linux,rs485-enabled-at-boot-time; */
+/* 	uart-has-rtscts; */
+/* 	fsl,dte-mode; */
+/* 	status = "okay"; */
+/* }; */
+
+/* /\* ttymxc4 uart - rs485-2 *\/ */
+/* &uart5 { */
+/* 	pinctrl-names = "default"; */
+/* 	pinctrl-0 = <&pinctrl_uart5>; */
+/* 	linux,rs485-enabled-at-boot-time; */
+/* 	uart-has-rtscts; */
+/* 	fsl,dte-mode; */
+/* 	status = "okay"; */
+/* }; */
 
 &usbotg1 {
 	pinctrl-names = "default";
@@ -202,13 +211,6 @@
 	dr_mode = "host";
 	disable-over-current;
 	status = "okay";
-};
-
-&gpio1 {
-	gpio-line-names = "CB_GPIOF", "", "", "", "", "CB_GPIOE", "", "",
-	"", "", "", "METER_RST", "METER_ID0", "METER_ID1", "METER_ADR0", "METER_ADR1",
-	"", "", "", "", "", "", "", "",
-	"", "", "", "", "", "", "", "";
 };
 
 &gpio2 {
@@ -251,24 +253,20 @@
 	pinctrl_hog1: hog1grp {
 		fsl,pins = <
 		/* Control board gpios */
-		MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08   0x1b0b0 /* CB_INT1 */
-		MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09   0x1b0b0 /* CB_INT2 */
-		MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10      0x1b0b0 /* CB_ID0 */
-		MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11   0x1b0b0 /* CB_ID1 */
-		MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12   0x1b0b0 /* CB_GPIOA */
-		MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13      0x1b0b0 /* CB_RST */
-		MX6UL_PAD_ENET2_TX_CLK__GPIO2_IO14     0x1b0b0 /* CB_INT0 */
-		MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15      0x1b0b0 /* CB_GPIOB */
-		/* MX6UL_PAD_GPIO1_IO06__GPIO1_IO06       0x1b0b0 /\* CB_GPIOC *\/ */
-		/* MX6UL_PAD_GPIO1_IO07__GPIO1_IO07       0x1b0b0 /\* CB_GPIOD *\/ */
-		MX6UL_PAD_GPIO1_IO05__GPIO1_IO05       0x1b0b0 /* CB_GPIOE */
-		MX6UL_PAD_GPIO1_IO00__GPIO1_IO00       0x1b0b0 /* CB_GPIOF */
+		MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08   0x1b0b0 /* J1-37: CB_INT1 */
+		MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09   0x1b0b0 /* J1-39: CB_INT2 */
+		MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10      0x1b0b0 /* J1-31: CB_ID0 */
+		MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11   0x1b0b0 /* J1-43: CB_ID1 */
+		MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12   0x1b0b0 /* J1-35: CB_GPIOA */
+		MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13      0x1b0b0 /* J1-45: CB_RST */
+		MX6UL_PAD_ENET2_TX_CLK__GPIO2_IO14     0x1b0b0 /* J1-57: CB_INT0 */
+		MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15      0x1b0b0 /* J1-55: CB_GPIOB */
+		/* These pads are used internally by the ethernet phy */
+		/* MX6UL_PAD_GPIO1_IO06__GPIO1_IO06       0x1b0b0 /\* J2-75: CB_GPIOC *\/ */
+		/* MX6UL_PAD_GPIO1_IO07__GPIO1_IO07       0x1b0b0 /\* J2-79: CB_GPIOD *\/ */
+		MX6UL_PAD_GPIO1_IO05__GPIO1_IO05       0x1b0b0 /* J2-27: CB_GPIOE */
+		MX6UL_PAD_GPIO1_IO00__GPIO1_IO00       0x1b0b0 /* J2-60: CB_GPIOF */
 		/* Meter gpios */
-		MX6UL_PAD_JTAG_TMS__GPIO1_IO11	       0x1b0b0 /* METER_RSTn */
-		MX6UL_PAD_JTAG_TDO__GPIO1_IO12	       0x1b0b0 /* METER_ID_B0 */
-		MX6UL_PAD_JTAG_TDI__GPIO1_IO13	       0x1b0b0 /* METER_ID_B1 */
-		MX6UL_PAD_JTAG_TCK__GPIO1_IO14	       0x1b0b0 /* METER_ADR_B0 */
-		MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15      0x1b0b0 /* METER_ADR_B1 */
 		MX6UL_PAD_CSI_DATA04__GPIO4_IO25       0x1b0b0 /* METER_PC7 */
 		MX6UL_PAD_CSI_DATA05__GPIO4_IO26       0x1b0b0 /* METER_PC8 */
 		MX6UL_PAD_CSI_DATA06__GPIO4_IO27       0x1b0b0 /* METER_PC10 */
@@ -327,23 +325,36 @@
 
 	pinctrl_uart4: uart4grp {
 		fsl,pins = <
-		MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
-		MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1
-		/* TODO: Connect both RTS and CTS */
-		/* MX6UL_PAD_LCD_VSYNC__UART4_DCE_RTS	0x1b0b1 */
-		MX6UL_PAD_LCD_VSYNC__GPIO3_IO03         0x1b0b1
+		MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1 /* J1-49 */
+		MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1 /* J1-50 */
+		MX6UL_PAD_LCD_VSYNC__GPIO3_IO03         0x1b0b1 /* J1-52 */
 		>;
 	};
 
 	pinctrl_uart5: uart5grp {
 		fsl,pins = <
-		MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1
-		MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1
-		/* TODO: Connect both RTS and CTS */
-		/* MX6UL_PAD_CSI_DATA02__UART5_DCE_RTS	0x1b0b1 */
-		MX6UL_PAD_CSI_DATA02__GPIO4_IO23        0x1b0b1
+		MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1 /* J1-88 */
+		MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1 /* J1-80 */
+		MX6UL_PAD_CSI_DATA02__GPIO4_IO23        0x1b0b1 /* J2-42 */
 		>;
 	};
+
+	/* DTE mode */
+	/* pinctrl_uart4: uart4grp { */
+	/* 	fsl,pins = < */
+	/* 	MX6UL_PAD_LCD_CLK__UART4_DTE_RX         0x1b0b1 /\* J1-49 *\/ */
+	/* 	MX6UL_PAD_LCD_ENABLE__UART4_DTE_TX      0x1b0b1 /\* J1-50 *\/ */
+	/* 	MX6UL_PAD_LCD_HSYNC__UART4_DTE_RTS      0x1b0b1 /\* J1-54 *\/ */
+	/* 	>; */
+	/* }; */
+
+	/* pinctrl_uart5: uart5grp { */
+	/* 	fsl,pins = < */
+	/* 	MX6UL_PAD_CSI_DATA00__UART5_DTE_RX      0x1b0b1 /\* J1-88 *\/ */
+	/* 	MX6UL_PAD_CSI_DATA01__UART5_DTE_TX      0x1b0b1 /\* J1-80 *\/ */
+	/* 	MX6UL_PAD_CSI_DATA03__UART5_DTE_RTS     0x1b0b1 /\* J2-42 *\/ */
+	/* 	>; */
+	/* }; */
 
 	pinctrl_uart6: uart6grp {
 		fsl,pins = <

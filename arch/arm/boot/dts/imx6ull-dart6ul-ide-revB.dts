@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2019 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-dart6ul-ide.dtsi"
+
+/ {
+	model = "IDE Systems Distribution Box revB";
+};
+
+/* TODO */
+&gpio1 {
+	gpio-line-names = "CB_GPIOF", "", "", "", "", "CB_GPIOE", "", "",
+	"", "", "", "METER_RST", "METER_ID0", "METER_ID1", "METER_ADR0", "METER_ADR1",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
+};
+
+&i2c2 {
+	boardid: eeprom@52 {
+		compatible = "rohm,br24g04", "atmel,24c04";
+		pagesize = <16>;
+		reg = <0x52>;
+	};
+};
+
+&iomuxc {
+	pinctrl-1 = <&pinctrl_hog2>;
+
+	pinctrl_hog2: hog2grp {
+		fsl,pins = <
+		/* Meter gpios -- revB specific */
+		MX6UL_PAD_JTAG_TMS__GPIO1_IO11	       0x1b0b0 /* TODO: METER_RSTn */
+		MX6UL_PAD_JTAG_TDO__GPIO1_IO12	       0x1b0b0 /* TODO: METER_ID_B0 */
+		MX6UL_PAD_JTAG_TDI__GPIO1_IO13	       0x1b0b0 /* TODO: METER_ID_B1 */
+		MX6UL_PAD_JTAG_TCK__GPIO1_IO14	       0x1b0b0 /* TODO: METER_ADR_B0 */
+		MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15      0x1b0b0 /* TODO: METER_ADR_B1 */
+		>;
+	};
+};

@@ -570,7 +570,8 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ull-colibri-wifi-eval-v3.dtb \
 	imx6ulz-14x14-evk.dtb \
 	imx6ull-dart6ul-vigil.dtb \
-	imx6ull-dart6ul-ide.dtb \
+	imx6ull-dart6ul-ide-revA.dtb \
+	imx6ull-dart6ul-ide-revB.dtb \
 	imx6ull-dart6ul-6ulcustomboard.dtb
 dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-cl-som-imx7.dtb \
