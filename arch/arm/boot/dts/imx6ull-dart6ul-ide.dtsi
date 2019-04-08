@@ -213,6 +213,13 @@
 	status = "okay";
 };
 
+&gpio1 {
+	gpio-line-names = "CB_GPIOF", "", "", "", "", "CB_GPIOE", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
+};
+
 &gpio2 {
 	gpio-line-names = "", "", "", "", "", "", "", "",
 	"", "", "CB_ID0", "CB_ID1", "CB_GPIOA", "CB_RST", "", "CB_GPIOB",
