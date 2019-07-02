@@ -427,6 +427,9 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6dl-sabreauto.dtb \
 	imx6dl-sabrelite.dtb \
 	imx6dl-sabresd.dtb \
+	imx6dl-sabresd-btwifi.dtb \
+	imx6dl-sabresd-hdcp.dtb \
+	imx6dl-sabresd-ldo.dtb \
 	imx6dl-savageboard.dtb \
 	imx6dl-seco-cq7-a42.dtb \
 	imx6dl-ts4900.dtb \
