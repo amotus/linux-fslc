@@ -1,0 +1,36 @@
+#
+#  SECO system driver
+#
+
+menu "SECO mxc support"
+
+config ECTRL
+	bool "Communication system with the Embedded Controller"
+	depends on I2C
+	help
+	  Say Y here if you want to use the Seco Communication System
+	  with the Embedded Controller. If unsure, say Y.
+
+config SECO_CPLD_FW
+	bool "CLPD Firmware management system"
+	help
+	  Say Y here if you want to use the CLPD Firmware management
+	  system. If unsure, say Y.
+
+config SECO_PWR_BTN
+	bool "SECO power button management system"
+	help
+	  Say Y here if you want to use the SECO power button
+	  management system. If unsure, say Y.
+
+config BUZZER
+        bool "Buzzer Support"
+	depends on PWM
+        help
+	  This option enables support for Audio Buzzer. You can change
+	  pwm buzzer parameters through sysfs. If unsure, say Y.
+
+config BOARD_SECO_ID
+	bool "S-Series board identification support"
+
+endmenu
