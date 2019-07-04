@@ -32,6 +32,13 @@
 	};
 };
 
+/* ttymxc6 uart - wirepass */
+&uart7 {
+        pinctrl-name = "default";
+        pinctrl-0 = <&pinctrl_uart7>;
+        status = "okay";
+};
+
 &iomuxc {
 	pinctrl-1 = <&pinctrl_hog2>;
 
@@ -45,4 +52,12 @@
 		MX6UL_PAD_NAND_CE1_B__GPIO4_IO14     0x1b0b0 /* J1-58: METER_ADR_B1 */
 		>;
 	};
+
+	pinctrl_uart7: uart7grp {
+		fsl,pins = <
+		MX6UL_PAD_LCD_DATA16__UART7_DCE_TX	0x1b0b1 /* J1-06 */
+		MX6UL_PAD_LCD_DATA17__UART7_DCE_RX	0x1b0b1 /* J1-10 */
+		>;
+	};
+
 };
