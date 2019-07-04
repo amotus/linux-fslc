@@ -65,13 +65,6 @@
 	status = "okay";
 };
 
-/* debug uart */
-&uart1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart1>;
-	status = "okay";
-};
-
 &i2c2 {
 	/* BR24G04NUX-3TTR board id */
 	boardid: eeprom@52 {
