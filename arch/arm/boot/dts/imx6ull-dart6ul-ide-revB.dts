@@ -8,6 +8,14 @@
 
 / {
 	model = "IDE Systems Distribution Box revB";
+
+	pps {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pps>;
+		compatible = "pps-gpio";
+		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
 };
 
 &gpio3 {
@@ -60,4 +68,9 @@
 		>;
 	};
 
+	pinctrl_pps: ppsgrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO02__GPIO1_IO02       0x1b0b0 /* J2-48: GPS PPS (default: 1Hz) */
+		>;
+	};
 };

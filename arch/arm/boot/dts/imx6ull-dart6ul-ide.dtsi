@@ -46,14 +46,6 @@
 			default-state = "on";
 		};
 	};
-
-	pps {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_pps>;
-		compatible = "pps-gpio";
-		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-	};
 };
 
 &i2c1 {
@@ -290,21 +282,9 @@
 		>;
 	};
 
-	pinctrl_gpspwr: gpspwrgrp {
-		fsl,pins = <
-		MX6UL_PAD_JTAG_MOD__GPIO1_IO10	       0x0b0b0 /* GPS power-enable */
-		>;
-	};
-
 	pinctrl_sensor: sensorgrp {
 		fsl,pins = <
 		MX6UL_PAD_CSI_HSYNC__GPIO4_IO20	       0x1b0b0 /* Over temperature irq */
-		>;
-	};
-
-	pinctrl_pps: ppsgrp {
-		fsl,pins = <
-		MX6UL_PAD_GPIO1_IO09__GPIO1_IO09       0x1b0b0 /* GPS PPS (default: 1Hz) */
 		>;
 	};
 
