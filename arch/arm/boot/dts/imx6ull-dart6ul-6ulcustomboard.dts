@@ -39,6 +39,12 @@
 	};
 };
 
+&wdog1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_wdog>;
+	fsl,ext-reset-output;
+};
+
 /* debug uart */
 &uart1 {
 	pinctrl-names = "default";
@@ -175,6 +181,12 @@
 	pinctrl_enet2_rst: enet2-rst-grp {
 		fsl,pins = <
 		MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
+		>;
+	};
+
+	pinctrl_wdog: wdoggrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
 		>;
 	};
 };

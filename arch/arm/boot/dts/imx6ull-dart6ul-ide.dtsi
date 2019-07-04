@@ -48,6 +48,12 @@
 	};
 };
 
+&wdog1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_wdog>;
+	fsl,ext-reset-output;
+};
+
 &i2c1 {
 	/* breaker status inputs 1-16 */
 	ioexpander1: ioexpander@20 {
@@ -347,6 +353,12 @@
 		fsl,pins = <
 		MX6UL_PAD_CSI_MCLK__UART6_DCE_TX	0x1b0b1 /* J1-76 */
 		MX6UL_PAD_CSI_PIXCLK__UART6_DCE_RX	0x1b0b1 /* J1-64 */
+		>;
+	};
+
+	pinctrl_wdog: wdoggrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
 		>;
 	};
 };
