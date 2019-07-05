@@ -36,7 +36,7 @@
 		led3 {
 			label = "internal:green:heartbeat";
 			gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "hearbeat";
+			linux,default-trigger = "heartbeat";
 			default-state = "on";
 		};
 
