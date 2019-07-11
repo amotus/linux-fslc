@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 2019 Amotus Solutions, Inc.
+ */
+
+/dts-v1/;
+
+#include "imx6ull-dart6ul-telflex-radio.dtsi"
+
+/ {
+	model = "Telflex Radio System";
+};
+
+&i2c2 {
+/* b'0101111' 0x2f */
+	pot: mcp4561-503@2f {
+		compatible = "microchip,mcp4561-503";
+		reg = <0x2f>;
+	};
+};
