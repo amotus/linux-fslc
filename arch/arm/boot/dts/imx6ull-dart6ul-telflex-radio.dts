@@ -15,5 +15,5 @@
 	pot: mcp4561-503@2f {
 		compatible = "microchip,mcp4561-503";
 		reg = <0x2f>;
-	}
+	};
 };
