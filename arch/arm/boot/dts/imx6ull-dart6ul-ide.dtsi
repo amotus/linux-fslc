@@ -36,7 +36,7 @@
 		led3 {
 			label = "internal:green:heartbeat";
 			gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "hearbeat";
+			linux,default-trigger = "heartbeat";
 			default-state = "on";
 		};
 
@@ -46,14 +46,12 @@
 			default-state = "on";
 		};
 	};
+};
 
-	pps {
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_pps>;
-		compatible = "pps-gpio";
-		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-	};
+&wdog1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_wdog>;
+	fsl,ext-reset-output;
 };
 
 &i2c1 {
@@ -241,7 +239,7 @@
 };
 
 &gpio5 {
-	gpio-line-name = "", "", "", "", "", "", "", "",
+	gpio-line-names = "", "", "", "", "", "", "", "",
 	"XBEE_RST", "XBEE_SLEEP", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "";
@@ -290,21 +288,9 @@
 		>;
 	};
 
-	pinctrl_gpspwr: gpspwrgrp {
-		fsl,pins = <
-		MX6UL_PAD_JTAG_MOD__GPIO1_IO10	       0x0b0b0 /* GPS power-enable */
-		>;
-	};
-
 	pinctrl_sensor: sensorgrp {
 		fsl,pins = <
 		MX6UL_PAD_CSI_HSYNC__GPIO4_IO20	       0x1b0b0 /* Over temperature irq */
-		>;
-	};
-
-	pinctrl_pps: ppsgrp {
-		fsl,pins = <
-		MX6UL_PAD_GPIO1_IO09__GPIO1_IO09       0x1b0b0 /* GPS PPS (default: 1Hz) */
 		>;
 	};
 
@@ -323,10 +309,10 @@
 
 	pinctrl_uart3: uart3grp {
 		fsl,pins = <
-		MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
-		MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
-		MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
-		MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
+		MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1 /* J1-59 */
+		MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1 /* J1-61 */
+		MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1 /* J1-67 */
+		MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1 /* J1-69 */
 		>;
 	};
 
@@ -342,7 +328,7 @@
 		fsl,pins = <
 		MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1 /* J1-88 */
 		MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1 /* J1-80 */
-		MX6UL_PAD_CSI_DATA02__GPIO4_IO23        0x1b0b1 /* J2-42 */
+		MX6UL_PAD_CSI_DATA02__GPIO4_IO23 	0x1b0b1 /* J1-90 */
 		>;
 	};
 
@@ -365,8 +351,14 @@
 
 	pinctrl_uart6: uart6grp {
 		fsl,pins = <
-		MX6UL_PAD_CSI_MCLK__UART6_DCE_TX	0x1b0b1
-		MX6UL_PAD_CSI_PIXCLK__UART6_DCE_RX	0x1b0b1
+		MX6UL_PAD_CSI_MCLK__UART6_DCE_TX	0x1b0b1 /* J1-76 */
+		MX6UL_PAD_CSI_PIXCLK__UART6_DCE_RX	0x1b0b1 /* J1-64 */
+		>;
+	};
+
+	pinctrl_wdog: wdoggrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
 		>;
 	};
 };

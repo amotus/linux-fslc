@@ -8,6 +8,14 @@
 
 / {
 	model = "IDE Systems Distribution Box revB";
+
+	pps {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pps>;
+		compatible = "pps-gpio";
+		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
 };
 
 &gpio3 {
@@ -20,8 +28,14 @@
 &gpio4 {
 	gpio-line-names = "", "", "", "", "", "", "", "",
 	"", "", "", "METER_ID_B1", "", "", "METER_ADR_B1", "METER_ID_B0",
-	"METER_ADR_B0", "", "", "", "", "", "", "",
+	"METER_ADR_B0", "", "", "GPS_RSTn", "", "", "", "",
 	"", "METER_PC7", "METER_PC8", "METER_PC10", "METER_PC9", "", "", "";
+
+	gps_rst {
+		gpios = <19 GPIO_ACTIVE_LOW>;
+		gpio-hog;
+		output-low;
+	};
 };
 
 &i2c2 {
@@ -30,6 +44,13 @@
 		pagesize = <16>;
 		reg = <0x52>;
 	};
+};
+
+/* ttymxc6 uart - wirepass */
+&uart7 {
+        pinctrl-name = "default";
+        pinctrl-0 = <&pinctrl_uart7>;
+        status = "okay";
 };
 
 &iomuxc {
@@ -43,6 +64,21 @@
 		MX6UL_PAD_NAND_WP_B__GPIO4_IO11      0x1b0b0 /* J2-63: METER_ID_B1  */
 		MX6UL_PAD_NAND_DQS__GPIO4_IO16       0x1b0b0 /* J1-62: METER_ADR_B0 */
 		MX6UL_PAD_NAND_CE1_B__GPIO4_IO14     0x1b0b0 /* J1-58: METER_ADR_B1 */
+		/* gps reset */
+		MX6UL_PAD_CSI_VSYNC__GPIO4_IO19      0x1b0b0 /* J1-89: GPS_RSTn */
+		>;
+	};
+
+	pinctrl_uart7: uart7grp {
+		fsl,pins = <
+		MX6UL_PAD_LCD_DATA16__UART7_DCE_TX	0x1b0b1 /* J1-06 */
+		MX6UL_PAD_LCD_DATA17__UART7_DCE_RX	0x1b0b1 /* J1-10 */
+		>;
+	};
+
+	pinctrl_pps: ppsgrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO02__GPIO1_IO02       0x1b0b0 /* J2-48: GPS PPS (default: 1Hz) */
 		>;
 	};
 };
