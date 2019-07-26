@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-2.0 OR X11
+/*
+ * Copyright 2019 Amotus Solutions, Inc.
+*/
+
+/dts-v1/;
+#include "imx6dl-seco-cs962revd.dtsi"
+
+/ {
+	model = "Seco CQ7-A42 Carrier Board with uQ7-962 ";
+	compatible = "fsl,imx6dl-cs962revd", "fsl,imx6dl";
+};
+
+&hdmi {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+};
+
+/* uSD */
+&usdhc4 {
+	status = "okay";
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_gpio>;
+
+	pinctrl_gpio: hog2grp  {
+		fsl,pins = <
+		MX6QDL_PAD_SD1_DAT0__GPIO1_IO16	0x130b0
+		MX6QDL_PAD_SD1_DAT1__GPIO1_IO17	0x130b0
+		MX6QDL_PAD_SD1_DAT2__GPIO1_IO19	0x130b0
+		MX6QDL_PAD_SD1_DAT3__GPIO1_IO21	0x130b0
+		>;
+	};
+};
