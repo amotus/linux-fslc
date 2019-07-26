@@ -30,14 +30,16 @@
 
 &iomuxc {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_gpio>;
+	pinctrl-0 = <&pinctrl_hp8>;
 
-	pinctrl_gpio: hog2grp  {
-		fsl,pins = <
-		MX6QDL_PAD_SD1_DAT0__GPIO1_IO16	0x130b0
-		MX6QDL_PAD_SD1_DAT1__GPIO1_IO17	0x130b0
-		MX6QDL_PAD_SD1_DAT2__GPIO1_IO19	0x130b0
-		MX6QDL_PAD_SD1_DAT3__GPIO1_IO21	0x130b0
-		>;
+	imx6dl-opuit-machine-o {
+		pinctrl_hp8: hoghp8grp  {
+			fsl,pins = <
+			MX6QDL_PAD_SD1_DAT0__GPIO1_IO16		0x130b0
+			MX6QDL_PAD_SD1_DAT1__GPIO1_IO17		0x130b0
+			MX6QDL_PAD_SD1_DAT2__GPIO1_IO19		0x130b0
+			MX6QDL_PAD_SD1_DAT3__GPIO1_IO21		0x130b0
+			>;
+		};
 	};
 };
