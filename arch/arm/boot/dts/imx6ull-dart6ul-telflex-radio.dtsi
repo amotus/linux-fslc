@@ -54,7 +54,7 @@
 &gpio4 {
 	gpio-line-names = "", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "",
-	"", "", "", "", "", "RESET_SOFT", "", "",
+	"", "", "", "", "", "", "", "",
 	"", "", "", "", "", "", "", "";
 };
 
@@ -71,13 +71,12 @@
 
 	pinctrl_btn1: btngrp {
 		fsl,pins = <
-		MX6UL_PAD_CSI_DATA02__GPIO4_IO23       0x1b0b0
-		MX6UL_PAD_CSI_DATA01__GPIO4_IO22       0x1b0b0
+		MX6UL_PAD_CSI_DATA03__GPIO4_IO24       0x1b0b0 /* GPIO4_24 RST_NETWORK */
+		MX6UL_PAD_CSI_DATA02__GPIO4_IO23       0x130b0 /* GPIO4_23 BOOT0 */
+		MX6UL_PAD_CSI_DATA01__GPIO4_IO22       0x1b0b0 /* GPIO4_22 NRESET MCU*/
 		>;
 	};
 	
-
-
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <
 		MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
@@ -86,43 +85,11 @@
 		MX6UL_PAD_UART1_RTS_B__UART1_DCE_RTS	0x1b0b1
 		>;
 	};
-	
+
 	pinctrl_usbotg1: usbotg1grp {
 		fsl,pins = <
 		MX6UL_PAD_GPIO1_IO01__USB_OTG1_OC      0x1b0b0
 		MX6UL_PAD_GPIO1_IO04__USB_OTG1_PWR     0x80000000
-		>;
-	};
-
-	pinctrl_uart3: uart3grp {
-		fsl,pins = <
-		MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
-		MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
-		MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
-		MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
-		>;
-	};
-
-	pinctrl_uart4: uart4grp {
-		fsl,pins = <
-		MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1 /* J1-49 */
-		MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1 /* J1-50 */
-		MX6UL_PAD_LCD_VSYNC__GPIO3_IO03         0x1b0b1 /* J1-52 */
-		>;
-	};
-
-	pinctrl_uart5: uart5grp {
-		fsl,pins = <
-		MX6UL_PAD_CSI_DATA00__UART5_DCE_TX	0x1b0b1 /* J1-88 */
-		MX6UL_PAD_CSI_DATA01__UART5_DCE_RX	0x1b0b1 /* J1-80 */
-		MX6UL_PAD_CSI_DATA02__GPIO4_IO23        0x1b0b1 /* J2-42 */
-		>;
-	};
-
-	pinctrl_uart6: uart6grp {
-		fsl,pins = <
-		MX6UL_PAD_CSI_MCLK__UART6_DCE_TX	0x1b0b1
-		MX6UL_PAD_CSI_PIXCLK__UART6_DCE_RX	0x1b0b1
 		>;
 	};
 };
