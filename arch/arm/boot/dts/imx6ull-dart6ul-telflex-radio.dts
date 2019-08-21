@@ -11,9 +11,291 @@
 };
 
 &i2c2 {
-/* b'0101111' 0x2f */
-	pot: mcp4561-503@2f {
-		compatible = "microchip,mcp4561-503";
-		reg = <0x2f>;
+	mux1: i2c-mux-0@70 {
+		compatible = "nxp,pca9548";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0x70>;
+		i2c-mux-idle-disconnect = <1>;
+		reset-gpios = <&gpio5 1 0>;
+
+		i2c@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0>;
+
+			// threshold 10kOhm
+			r3-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+			// compensation 10kOhm
+			r3-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@1 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <1>;
+
+			// audioout 50kOhm
+			r3-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			r3-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+		i2c@2 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <2>;
+
+			// threshold 10kOhm
+			r4-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+
+			// compensation 10kOhm
+			r4-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@3 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <3>;
+
+			// audioout 50kOhm
+			r4-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			r4-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+		i2c@4 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <4>;
+
+			// threshold 10kOhm
+			r5-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+
+			// compensation 10kOhm
+			r5-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@5 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <5>;
+
+			// audioout 50kOhm
+			r5-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			r5-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+		i2c@6 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <6>;
+
+			hs-cnd-audioin@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@7 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <7>;
+
+			hs-cnd-audioout@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+		};
+	};
+
+	mux2: i2c-mux-1@71 {
+		compatible = "nxp,pca9548";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0x71>;
+		i2c-mux-idle-disconnect = <1>;
+
+		i2c@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0>;
+
+			// threshold 10kOhm
+			ip2-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+			// compensation 10kOhm
+			ip2-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@1 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <1>;
+
+			// audioout 50kOhm
+			ip2-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			ip2-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+
+		i2c@2 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <2>;
+
+			// threshold 10kOhm
+			ip1-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+			// compensation 10kOhm
+			ip1-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@3 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <3>;
+
+			// audioout 50kOhm
+			ip1-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			ip1-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+		i2c@4 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <4>;
+
+			// threshold 10kOhm
+			r1-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+			// compensation 10kOhm
+			r1-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@5 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <5>;
+
+			// audioout 50kOhm
+			r1-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			r1-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
+
+
+		i2c@6 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <6>;
+
+			// threshold 10kOhm
+			r2-cmp-threshold@2f {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2f>;
+			};
+			// compensation 10kOhm
+			r2-cmp-compensation@2e {
+				compatible = "microchip,mcp4561-103";
+				reg = <0x2e>;
+			};
+		};
+
+		i2c@7 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <7>;
+
+			// audioout 50kOhm
+			r2-cnd-audioout@2e {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2e>;
+			};
+
+			// audioin 50kOhm
+			r2-cnd-audioin@2f {
+				compatible = "microchip,mcp4561-503";
+				reg = <0x2f>;
+			};
+		};
 	};
 };
