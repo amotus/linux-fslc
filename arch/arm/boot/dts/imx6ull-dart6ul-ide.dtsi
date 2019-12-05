@@ -107,7 +107,7 @@
 				  "CON25", "CON26", "CON27", "CON28", "CON29", "CON30", "CON31", "CON32";
 	};
 
-	/* relay outputs */
+	/* relay outputs 1-8 */
 	ioexpander5: ioexpander@24 {
 		compatible = "microchip,mcp23008";
 		gpio-controller;
@@ -116,7 +116,7 @@
 		gpio-line-names = "RL1", "RL2", "RL3", "RL4", "RL5", "RL6", "RL7", "RL8";
 	};
 
-	/* switch inputs */
+	/* switch inputs 1-8 */
 	ioexpander6: ioexpander6@25 {
 		compatible = "microchip,mcp23008";
 		gpio-controller;
