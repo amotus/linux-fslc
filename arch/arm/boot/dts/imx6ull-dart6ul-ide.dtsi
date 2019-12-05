@@ -61,6 +61,8 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x20>;
+		gpio-line-names = "BR1", "BR2", "BR3", "BR4", "BR5", "BR6", "BR7", "BR8",
+				  "BR9", "BR10", "BR11", "BR12", "BR13", "BR14", "BR15", "BR16";
 
 		interrupt-parent = <&gpio2>;
 		interrupts = <14 IRQ_TYPE_LEVEL_LOW>;
@@ -75,6 +77,8 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x21>;
+		gpio-line-names = "BR17", "BR18", "BR19", "BR20", "BR21", "BR22", "BR23", "BR24",
+				  "BR25", "BR26", "BR27", "BR28", "BR29", "BR30", "BR31", "BR32";
 
 		interrupt-parent = <&gpio2>;
 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
@@ -89,6 +93,8 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x22>;
+		gpio-line-names = "CON1", "CON2", "CON3", "CON4", "CON5", "CON6", "CON7", "CON8",
+				  "CON9", "CON10", "CON11", "CON12", "CON13", "CON14", "CON15", "CON16";
 	};
 
 	/* contactor control outputs 17-32 */
@@ -97,6 +103,8 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x23>;
+		gpio-line-names = "CON17", "CON18", "CON19", "CON20", "CON21", "CON22", "CON23", "CON24",
+				  "CON25", "CON26", "CON27", "CON28", "CON29", "CON30", "CON31", "CON32";
 	};
 
 	/* relay outputs */
@@ -105,6 +113,7 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x24>;
+		gpio-line-names = "RL1", "RL2", "RL3", "RL4", "RL5", "RL6", "RL7", "RL8";
 	};
 
 	/* switch inputs */
@@ -113,6 +122,7 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		reg = <0x25>;
+		gpio-line-names = "SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8";
 
 		interrupt-parent = <&gpio2>;
 		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
