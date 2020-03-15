@@ -1,0 +1,122 @@
+/*
+ * Copyright 2020 Amotus Solutions, Inc.
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ */
+
+/dts-v1/;
+#include "imx28.dtsi"
+
+/ {
+	model = "Digi ConnectCard for i.MX28 JumpStart Kit";
+	compatible = "digi,ccardimx28js", "digi,ccardimx28", "fsl,imx28";
+	
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x40000000 0x10000000>;
+	};
+
+	apb@80000000 {
+		apbh@80000000 {
+			gpmi-nand@8000c000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&gpmi_pins_a &gpmi_status_cfg>;
+				status = "okay";
+			};
+			pinctrl@80018000 {
+				pinctrl-names = "default";
+				
+				/* NAND powered at 1.8V */
+				gpmi_pins_a: gpmi-nand@0 {
+					fsl,voltage = <0>;
+				};
+				
+				/* I2C0 has external pull-ups on JSK board */
+				i2c0_pins_a: i2c0@0 {
+					fsl,pull-up = <0>;
+				};
+			};
+		};
+		
+		apbx@80040000 {
+			power@80044000 {
+				#address-cells = <1>;
+				#size-cells = <1>;
+				ranges;
+				compatible = "simple-bus";
+				
+				reg_vddio: reg_vddio@80044040 {
+					compatible = "regulator-fixed";
+					reg = <0x80044060 0x10>;
+					regulator-name = "vddio";
+					regulator-min-microvolt = <2880000>;
+					regulator-max-microvolt = <3680000>;
+					regulator-type = "voltage";
+					regulator-always-on;
+				};
+				
+				reg_vdd: reg_vdd@80044040 {
+					compatible = "regulator-fixed";
+					reg = <0x80044040 0x10>;
+					regulator-name = "vddd";
+					regulator-min-microvolt = <800000>;
+					regulator-max-microvolt = <1575000>;
+					regulator-type = "voltage";
+					regulator-always-on;
+				};
+				
+				reg_vddd_bo: reg_vddd_bo@80044040 {
+					compatible = "regulator-fixed";
+					reg = <0x80044040 0x10>;
+					regulator-name = "vddd_bo";
+					regulator-min-microvolt = <800000>;
+					regulator-max-microvolt = <1575000>;
+					regulator-type = "voltage";
+					regulator-always-on;
+					mxs-regulator-brown-out;
+				};
+			};
+
+			pwm: pwm@80064000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pwm2_pins_a>;
+				status = "okay";
+			};
+			
+			duart: serial@80074000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&duart_pins_c>;
+				status = "okay";
+			};
+			
+			auart0: serial@8006a000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&auart0_pins_a>;
+				uart-has-rtscts;
+				status = "okay";
+			};
+
+			auart3: serial@80070000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&auart3_pins_a>;
+				status = "okay";
+			};	
+		};
+	};
+	
+	ahb@80080000 {
+		mac0: ethernet@800f0000 {
+			phy-mode = "rmii";
+			pinctrl-names = "default";
+			pinctrl-0 = <&mac0_pins_a>;
+			phy-reset-gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
+			phy-reset-duration = <100>;
+			status = "okay";
+		};
+	};
+};
