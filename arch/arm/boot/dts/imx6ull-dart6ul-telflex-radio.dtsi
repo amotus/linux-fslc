@@ -13,6 +13,10 @@
 	chosen {
 		stdout-path = &uart1;
 	};
+
+    aliases {
+        serial3 = &uart3; /* become /dev/ttyS3 */
+    };
 };
 
 /* ttymxc0 uart - debug uart */
@@ -22,6 +26,15 @@
 	uart-has-rtscts;
 	status = "okay";
 };
+
+/* ttymxc2 uart - xbee */
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
+	uart-has-rtscts;
+	status = "okay";
+};
+
 
 
 &usbotg1 {
@@ -77,6 +90,7 @@
 		>;
 	};
 
+    /* uart1 : Debug Uurt */
 	pinctrl_uart1: uart1grp {
 		fsl,pins = <
 		MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
@@ -86,6 +100,16 @@
 		>;
 	};
 
+
+    /* uart3 : VoIP Module */
+	pinctrl_uart3: uart3grp {
+		fsl,pins = <
+		MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1 /* J1-59 */
+		MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1 /* J1-61 */
+		MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1 /* J1-67 */
+		MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1 /* J1-69 */
+		>;
+	};
 
 	pinctrl_reset: btngrp {
 		fsl,pins = <
