@@ -132,6 +132,7 @@
 			pinctrl-0 = <&mac0_pins_a &mac0_pins_ccardimx28js>;
 			phy-reset-gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
 			phy-reset-duration = <50>;
+			phy-reset-on-fec-open;
 			phy-handle = <&ethphy0>;
 			status = "okay";
 
