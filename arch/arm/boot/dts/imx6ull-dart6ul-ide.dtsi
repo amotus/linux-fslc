@@ -5,6 +5,7 @@
 #include "imx6ull-dart6ul.dtsi"
 #include "imx6ull-dart6ul-emmc-wifi.dtsi"
 #include "imx6ull-dart6ul-ethernet.dtsi"
+#include <dt-bindings/input/linux-event-codes.h>
 
 / {
 	model = "IDE Systems DistributionBox";
@@ -44,6 +45,17 @@
 			label = "internal:red:fault";
 			gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		label = "switch-input";
+
+		override {
+			label = "override";
+			linux,code = <KEY_1>;
+			gpios = <&ioexpander6 0 GPIO_ACTIVE_HIGH>;
 		};
 	};
 };
