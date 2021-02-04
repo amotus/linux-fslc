@@ -52,10 +52,60 @@
 		compatible = "gpio-keys";
 		label = "switch-input";
 
-		override {
-			label = "override";
+		/* SW1 */
+		user-key1 {
+			label = "user-key1";
 			linux,code = <KEY_1>;
 			gpios = <&ioexpander6 0 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW2 */
+		user-key2 {
+			label = "user-key2";
+			linux,code = <KEY_2>;
+			gpios = <&ioexpander6 1 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW3 */
+		user-key3 {
+			label = "user-key3";
+			linux,code = <KEY_3>;
+			gpios = <&ioexpander6 2 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW4 */
+		user-key4 {
+			label = "user-key4";
+			linux,code = <KEY_4>;
+			gpios = <&ioexpander6 3 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW5 */
+		user-key5 {
+			label = "user-key5";
+			linux,code = <KEY_5>;
+			gpios = <&ioexpander6 4 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW6 */
+		user-key6 {
+			label = "user-key6";
+			linux,code = <KEY_6>;
+			gpios = <&ioexpander6 5 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW7 */
+		user-key7 {
+			label = "user-key7";
+			linux,code = <KEY_7>;
+			gpios = <&ioexpander6 6 GPIO_ACTIVE_HIGH>;
+		};
+
+		/* SW8 */
+		user-key8 {
+			label = "user-key8";
+			linux,code = <KEY_8>;
+			gpios = <&ioexpander6 7 GPIO_ACTIVE_HIGH>;
 		};
 	};
 };
