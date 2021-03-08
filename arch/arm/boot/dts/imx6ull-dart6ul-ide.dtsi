@@ -22,10 +22,9 @@
 		compatible = "gpio-leds";
 
 		led1 {
-			label = "external:green:heartbeat";
+			label = "external:override";
 			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "heartbeat";
-			default-state = "on";
+			default-state = "off";
 		};
 
 		led2 {
