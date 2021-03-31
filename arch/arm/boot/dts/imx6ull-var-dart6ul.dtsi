@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Amotus Solution Inc.
+ * Author: Marc Ferland <ferlandm@amotus.ca>
+*/
+
+#include "imx6ul-var-dart6ul.dtsi"
+
+/delete-node/ &pinctrl_snvs_brcm_bt;
+/delete-node/ &pinctrl_snvs_brcm_wifi;
+/delete-node/ &pinctrl_enet1_rst;
+
+&iomuxc_snvs {
+	pinctrl_snvs_brcm_bt: snvs-brcm-bt {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0	/* BT_REG_ON */
+		>;
+	};
+
+	pinctrl_snvs_brcm_wifi: snvs-brcm-wifi {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0	/* WL_REG_ON */
+		>;
+	};
+
+        pinctrl_enet1_rst: enet1-rst-grp {
+		fsl,pins = <
+		MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0
+		>;
+	};
+};

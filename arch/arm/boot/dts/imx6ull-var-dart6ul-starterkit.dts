@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Amotus Solution Inc.
+ * Author: Marc Ferland <ferlandm@amotus.ca>
+ */
+
+/dts-v1/;
+
+#include "imx6ull.dtsi"
+#include "imx6ull-var-dart6ul.dtsi"
+#include "imx6ul-var-dart6ul-wifi.dtsi"
+#include "imx6ull-var-dart6ul-6ulcustomboard.dtsi"
+
+/ {
+	model = "Variscite DART6UL StarterKit";
+	compatible = "variscite, imx6ull-var-dart6ul-starterkit", "fsl,imx6ull";
+
+        /* TODO: specify through u-boot? */
+	/* memory { */
+	/* 	device_type = "memory"; */
+	/* 	reg = <0x80000000 0x20000000>; */
+	/* }; */
+
+	chosen {
+		stdout-path = &uart1;
+	};
+
+        sound {
+                status = "okay";
+        };
+};
+
+&codec {
+        status = "okay";
+};
+
+&fec1 {
+        status = "okay";
+};
+
+&fec2 {
+	status = "okay";
+};
+
+&i2c2 {
+	codec: wm8731@1a {
+		status = "okay";
+	};
+};
+
+&usdhc2 {
+        status = "okay";
+};
+
+&sai2 {
+        status = "okay";
+};
