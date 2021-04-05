@@ -13,7 +13,7 @@
 
 / {
 	model = "Variscite DART6UL StarterKit";
-	compatible = "variscite, imx6ull-var-dart6ul-starterkit", "fsl,imx6ull";
+	compatible = "variscite,imx6ull-var-dart6ul-starterkit", "fsl,imx6ull";
 
         /* TODO: specify through u-boot? */
 	/* memory { */
