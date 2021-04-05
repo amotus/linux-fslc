@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Amotus Solution Inc.
+ * Author: Marc Ferland <ferlandm@amotus.ca>
+ */
+
+/dts-v1/;
+
+#include "imx6ull.dtsi"
+#include "imx6ull-var-dart6ul.dtsi"
+#include "imx6ul-var-dart6ul-wifi.dtsi"
+#include "imx6ull-dart6ul-ide-pmc.dtsi"
+
+/ {
+	model = "IDE Systems Distribution Box revA";
+        compatible = "ide,imx6ull-dart6ul-ide-pmc-reva", "fsl,imx6ull";
+
+	pps {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pps>;
+		compatible = "pps-gpio";
+		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
+
+&fec1 {
+        status = "okay";
+};
+
+&gpio1 {
+	gpio-line-names = "CB_GPIOF", "", "", "", "", "CB_GPIOE", "", "",
+	"", "", "", "METER_RST", "METER_ID0", "METER_ID1", "METER_ADR0", "METER_ADR1",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
+};
+
+&iomuxc {
+	pinctrl-1 = <&pinctrl_hog2>;
+
+	pinctrl_hog2: hog2grp {
+		fsl,pins = <
+		/* Meter gpios -- revA specific */
+		MX6UL_PAD_JTAG_TMS__GPIO1_IO11	       0x1b0b0 /* J2-54: METER_RSTn */
+		MX6UL_PAD_JTAG_TDO__GPIO1_IO12	       0x1b0b0 /* J2-67: METER_ID_B0 */
+		MX6UL_PAD_JTAG_TDI__GPIO1_IO13	       0x1b0b0 /* J2-69: METER_ID_B1 */
+		MX6UL_PAD_JTAG_TCK__GPIO1_IO14	       0x1b0b0 /* J2-71: METER_ADR_B0 */
+		MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15      0x1b0b0 /* J2-73: METER_ADR_B1 */
+		>;
+	};
+
+	pinctrl_gpspwr: gpspwrgrp {
+		fsl,pins = <
+		MX6UL_PAD_JTAG_MOD__GPIO1_IO10	       0x0b0b0 /* GPS power-enable */
+		>;
+	};
+
+	pinctrl_pps: ppsgrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO09__GPIO1_IO09       0x1b0b0 /* GPS PPS (default: 1Hz) */
+		>;
+	};
+};
+
+&usdhc2 {
+        status = "okay";
+};

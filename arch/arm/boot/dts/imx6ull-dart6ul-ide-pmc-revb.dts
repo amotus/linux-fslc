@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2021 Amotus Solution Inc.
+ * Author: Marc Ferland <ferlandm@amotus.ca>
+ */
+
+/dts-v1/;
+
+#include "imx6ull.dtsi"
+#include "imx6ull-var-dart6ul.dtsi"
+#include "imx6ul-var-dart6ul-wifi.dtsi"
+#include "imx6ull-dart6ul-ide-pmc.dtsi"
+
+/ {
+	model = "IDE Systems Distribution Box revB";
+        compatible = "ide,imx6ull-dart6ul-ide-pmc-reva", "fsl,imx6ull";
+
+	pps {
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pps>;
+		compatible = "pps-gpio";
+		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
+
+&fec1 {
+        status = "okay";
+};
+
+&gpio3 {
+	gpio-line-names = "", "", "", "", "METER_RSTn", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "";
+};
+
+&gpio4 {
+	gpio-line-names = "", "", "", "", "", "", "", "",
+	"", "", "", "METER_ID_B1", "", "", "METER_ADR_B1", "METER_ID_B0",
+	"METER_ADR_B0", "", "", "GPS_RSTn", "", "", "", "",
+	"", "METER_PC7", "METER_PC8", "METER_PC10", "METER_PC9", "", "", "";
+
+	gps_rst {
+		gpios = <19 GPIO_ACTIVE_LOW>;
+		gpio-hog;
+		output-low;
+	};
+};
+
+&i2c2 {
+	boardid: eeprom@52 {
+		compatible = "rohm,br24g04", "atmel,24c04";
+		pagesize = <16>;
+		reg = <0x52>;
+	};
+};
+
+&iomuxc {
+	pinctrl-1 = <&pinctrl_hog2>;
+
+	pinctrl_hog2: hog2grp {
+		fsl,pins = <
+		/* Meter gpios -- revB specific */
+		MX6UL_PAD_LCD_RESET__GPIO3_IO04      0x1b0b0 /* J1-56: METER_RSTn   */
+		MX6UL_PAD_NAND_CLE__GPIO4_IO15       0x1b0b0 /* J2-61: METER_ID_B0  */
+		MX6UL_PAD_NAND_WP_B__GPIO4_IO11      0x1b0b0 /* J2-63: METER_ID_B1  */
+		MX6UL_PAD_NAND_DQS__GPIO4_IO16       0x1b0b0 /* J1-62: METER_ADR_B0 */
+		MX6UL_PAD_NAND_CE1_B__GPIO4_IO14     0x1b0b0 /* J1-58: METER_ADR_B1 */
+		/* gps reset */
+		MX6UL_PAD_CSI_VSYNC__GPIO4_IO19      0x1b0b0 /* J1-89: GPS_RSTn */
+		>;
+	};
+
+	pinctrl_uart7: uart7grp {
+		fsl,pins = <
+		MX6UL_PAD_LCD_DATA16__UART7_DCE_TX	0x1b0b1 /* J1-06 */
+		MX6UL_PAD_LCD_DATA17__UART7_DCE_RX	0x1b0b1 /* J1-10 */
+		>;
+	};
+
+	pinctrl_pps: ppsgrp {
+		fsl,pins = <
+		MX6UL_PAD_GPIO1_IO02__GPIO1_IO02       0x1b0b0 /* J2-48: GPS PPS (default: 1Hz) */
+		>;
+	};
+};
+
+/* ttymxc6 uart - wirepass */
+&uart7 {
+        pinctrl-name = "default";
+        pinctrl-0 = <&pinctrl_uart7>;
+        status = "okay";
+};
+
+&usdhc2 {
+        status = "okay";
+};
