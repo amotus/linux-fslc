@@ -13,7 +13,7 @@
 
 / {
 	model = "IDE Systems Distribution Box revB";
-        compatible = "ide,imx6ull-dart6ul-ide-pmc-reva", "fsl,imx6ull";
+        compatible = "ide,imx6ull-dart6ul-ide-pmc-revb", "fsl,imx6ull";
 
 	pps {
 		pinctrl-names = "default";
