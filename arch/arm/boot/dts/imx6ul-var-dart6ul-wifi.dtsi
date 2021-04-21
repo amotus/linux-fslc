@@ -22,16 +22,16 @@
 	bluetooth {
 		compatible = "brcm,bcm43438-bt";
 		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_brcm_lpo>;
+		pinctrl-0 = <&pinctrl_snvs_brcm_bt>;
 		shutdown-gpios = <&gpio5 4 GPIO_ACTIVE_HIGH>;
 	};
 };
 
 &usdhc1 {
 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_brcm_lpo>;
+	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_brcm_lpo>;
+	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_brcm_lpo>;
 	no-1-8-v;
 	non-removable;
 	mmc-pwrseq = <&usdhc1_pwrseq>;
