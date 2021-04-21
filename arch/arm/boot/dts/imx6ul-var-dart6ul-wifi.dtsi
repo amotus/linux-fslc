@@ -5,13 +5,6 @@
 */
 
 / {
-	reg_3v3: regulator-3v3 {
-		compatible = "regulator-fixed";
-		regulator-name = "VSD_3V3";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-	};
-
 	usdhc1_pwrseq: usdhc1-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
@@ -42,7 +35,6 @@
 	no-1-8-v;
 	non-removable;
 	mmc-pwrseq = <&usdhc1_pwrseq>;
-	vmmc-supply = <&reg_3v3>; /* TODO: needed? */
 	status = "okay";
 
 	#address-cells = <1>;
