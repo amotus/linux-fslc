@@ -53,6 +53,13 @@
 	status = "disabled";
 };
 
+&i2c1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c1>;
+	clock_frequency = <400000>;
+	status = "disabled";
+};
+
 &i2c2 {
 	clock_frequency = <100000>;
 	pinctrl-names = "default";
@@ -288,6 +295,13 @@
 		MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
 		MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
 		MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
+		>;
+	};
+
+	pinctrl_i2c1: i2c1grp {
+		fsl,pins = <
+		MX6UL_PAD_UART4_TX_DATA__I2C1_SCL	0x4001b8b0
+		MX6UL_PAD_UART4_RX_DATA__I2C1_SDA	0x4001b8b0
 		>;
 	};
 
