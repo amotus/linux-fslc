@@ -110,6 +110,8 @@
 };
 
 &i2c1 {
+	status = "okay";
+
 	/* breaker status inputs 1-16 */
 	ioexpander1: ioexpander@20 {
 		compatible = "microchip,mcp23017";
