@@ -1,0 +1,88 @@
+/*
+ * Copyright 2021 Amotus Solutions Inc.
+ */
+
+#include "imx8mq-var-dart-dt8mcustomboard-legacy.dtsi"
+#include "imx8mq-var-dart-wifi.dtsi"
+#include "imx8mq-var-dart-dt8mcustomboard-m4.dtsi"
+
+/ {
+	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
+	/* TODO: pull gpio5 5 low on boot */
+};
+
+/* bluetooth */
+&uart4 {
+	status = "disabled";
+};
+
+/*
+ * Disable spi1 bus. Used by touch controller, CAN controller and the
+ * SPI test device.
+ */
+&ecspi1 {
+	status = "disabled";
+};
+
+&i2c3 {
+	status = "okay";
+};
+
+/* TODO: why are we disabling gpio2 bank? */
+&gpio2 {
+	status = "disabled";
+};
+
+&ecspi2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi2>;
+	cs-gpios = <&gpio5 13 GPIO_ACTIVE_HIGH>,
+		   <&gpio3 21 GPIO_ACTIVE_HIGH>,
+		   <&gpio3 22 GPIO_ACTIVE_HIGH>,
+		   <&gpio3 23 GPIO_ACTIVE_HIGH>;
+	fsl,spi-num-chipselects = <4>;
+	status = "okay";
+
+	/* Test SPI device */
+        spidev@0 {
+		compatible = "spidev";
+		spi-max-frequency = <20000000>;
+		reg = <0>;
+		status = "okay";
+        };
+
+        spidev@1 {
+		compatible = "spidev";
+		spi-max-frequency = <20000000>;
+		reg = <1>;
+		status = "okay";
+        };
+
+        spidev@2 {
+		compatible = "spidev";
+		spi-max-frequency = <20000000>;
+		reg = <2>;
+		status = "okay";
+        };
+
+        spidev@3 {
+		compatible = "spidev";
+		spi-max-frequency = <20000000>;
+		reg = <3>;
+		status = "okay";
+        };
+};
+
+&iomuxc {
+	pinctrl_ecspi2: ecspi2grp {
+		fsl,pins = <
+		MX8MQ_IOMUXC_ECSPI2_SCLK_ECSPI2_SCLK		0x1b
+		MX8MQ_IOMUXC_ECSPI2_MOSI_ECSPI2_MOSI		0x1b
+		MX8MQ_IOMUXC_ECSPI2_MISO_ECSPI2_MISO		0x1b
+		MX8MQ_IOMUXC_ECSPI2_SS0_GPIO5_IO13 		0x1b
+		MX8MQ_IOMUXC_SAI5_RXD0_GPIO3_IO21		0x1b
+		MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22		0x1b
+		MX8MQ_IOMUXC_SAI5_RXD2_GPIO3_IO23		0x1b
+		>;
+	};
+};

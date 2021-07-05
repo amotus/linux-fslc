@@ -135,6 +135,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-dp.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-hdmi.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds.dtb \
 			  imx8mq-var-dart-dt8mcustomboard-wifi-lvds-hdmi.dtb
+dtb-$(CONFIG_ARCH_MXC) += imx8mq-var-dart-dt8mcustomboard-diamentis.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek-dom0.dtb imx8qm-mek-domu.dtb \
 			  imx8qm-mek-root.dtb imx8qm-mek-inmate.dtb
 dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
