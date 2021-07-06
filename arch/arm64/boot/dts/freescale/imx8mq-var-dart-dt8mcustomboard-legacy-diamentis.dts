@@ -58,28 +58,24 @@ disabled. */
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <0>;
-		status = "okay";
         };
 
         spidev@1 {
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <1>;
-		status = "okay";
         };
 
         spidev@2 {
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <2>;
-		status = "okay";
         };
 
         spidev@3 {
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <3>;
-		status = "okay";
         };
 };
 
