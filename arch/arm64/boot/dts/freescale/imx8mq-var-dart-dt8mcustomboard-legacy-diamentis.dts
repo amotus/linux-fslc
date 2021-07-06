@@ -8,6 +8,10 @@
 
 / {
 	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
+
+	sound-wm8904 {
+		status = "disabled";
+	};
 };
 
 /* uart4 is activated by imx8mq-var-dart-wifi.dtsi, make sure it stays
