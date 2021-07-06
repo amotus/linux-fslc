@@ -55,24 +55,32 @@ disabled. */
 
 	/* Test SPI device */
         spidev@0 {
+		/* TODO: add specific compatible string, all spi
+		devices are compatible with spidev */
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <0>;
         };
 
         spidev@1 {
+		/* TODO: add specific compatible string, all spi
+		devices are compatible with spidev */
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <1>;
         };
 
         spidev@2 {
+		/* TODO: add specific compatible string, all spi
+		devices are compatible with spidev */
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <2>;
         };
 
         spidev@3 {
+		/* TODO: add specific compatible string, all spi
+		devices are compatible with spidev */
 		compatible = "spidev";
 		spi-max-frequency = <20000000>;
 		reg = <3>;
