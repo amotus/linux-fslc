@@ -8,7 +8,6 @@
 
 / {
 	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
-	/* TODO: pull gpio5 5 low on boot */
 };
 
 /* bluetooth */
@@ -31,6 +30,16 @@
 /* TODO: why are we disabling gpio2 bank? */
 &gpio2 {
 	status = "disabled";
+};
+
+&gpio5 {
+	/* disable BT buffer */
+	bt-en {
+		gpio-hog;
+		gpios = <5 GPIO_ACTIVE_LOW>;
+		output-high;
+		line-name = "bt_en";
+	};
 };
 
 &ecspi2 {
