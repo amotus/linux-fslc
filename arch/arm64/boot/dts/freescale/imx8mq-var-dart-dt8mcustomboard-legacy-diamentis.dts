@@ -23,10 +23,6 @@
 	status = "disabled";
 };
 
-&i2c3 {
-	status = "okay";
-};
-
 /* TODO: why are we disabling gpio2 bank? */
 &gpio2 {
 	status = "disabled";
