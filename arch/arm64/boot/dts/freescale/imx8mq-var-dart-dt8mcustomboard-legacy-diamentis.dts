@@ -14,8 +14,10 @@
 	};
 };
 
-/* uart4 is activated by imx8mq-var-dart-wifi.dtsi, make sure it stays
-disabled. */
+/*
+ * uart4 is activated by imx8mq-var-dart-wifi.dtsi, make sure it stays
+ * disabled.
+ */
 &uart4 {
 	status = "disabled";
 };
@@ -28,13 +30,13 @@ disabled. */
 	status = "disabled";
 };
 
-/* TODO: why are we disabling gpio2 bank? */
+/* disable gpio2 bank to make it available in the M4 */
 &gpio2 {
 	status = "disabled";
 };
 
 &gpio5 {
-	/* disable BT buffer */
+	/* disable BT buffer/level shifter */
 	bt-en {
 		gpio-hog;
 		gpios = <5 GPIO_ACTIVE_LOW>;
