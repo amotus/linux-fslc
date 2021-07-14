@@ -12,6 +12,20 @@
 };
 
 /*
+* Enable rpmsg
+*/
+&rpmsg{
+	status = "okay";
+};
+
+/*
+* Enable i2C3 because imx8mq-var-dart-dt8mcustomboard-m4.dtsi disables it
+*/
+&i2c3 {
+	status = "okay";
+};
+
+/*
  * uart4 is activated by imx8mq-var-dart-wifi.dtsi, make sure it stays
  * disabled.
  */
