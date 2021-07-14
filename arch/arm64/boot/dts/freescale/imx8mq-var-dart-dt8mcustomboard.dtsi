@@ -170,7 +170,7 @@
 		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
 		microchip,rx-int-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
 		spi-max-frequency = <20000000>;
-		status = "okay";
+		status = "disabled";
 	};
 
 	/* Test SPI device */
