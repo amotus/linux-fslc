@@ -52,10 +52,6 @@
 	};
 };
 
-&i2c3 {
-	status = "disabled";
-};
-
 &pwm2 {
 	status = "disabled";
 };
