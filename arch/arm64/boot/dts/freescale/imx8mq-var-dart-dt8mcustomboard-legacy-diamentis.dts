@@ -9,9 +9,6 @@
 / {
 	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
 
-	sound-wm8904 {
-		status = "disabled";
-	};
 };
 
 /*
