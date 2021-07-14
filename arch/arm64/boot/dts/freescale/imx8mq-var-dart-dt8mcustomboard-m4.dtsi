@@ -68,7 +68,7 @@
 	vdev-nums = <1>;
 	reg = <0x0 0x40000000 0x0 0x10000>;
 	memory-region = <&vdevbuffer>;
-	status = "disabled";
+	status = "okay";
 };
 
 &tmu {
