@@ -9,9 +9,20 @@
 / {
 	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
 
-	sound-wm8904 {
-		status = "disabled";
-	};
+};
+
+/*
+* Enable rpmsg
+*/
+&rpmsg{
+	status = "okay";
+};
+
+/*
+* Enable i2C3 because imx8mq-var-dart-dt8mcustomboard-m4.dtsi disables it
+*/
+&i2c3 {
+	status = "okay";
 };
 
 /*
