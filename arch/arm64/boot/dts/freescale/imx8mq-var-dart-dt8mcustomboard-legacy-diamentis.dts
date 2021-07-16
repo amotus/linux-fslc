@@ -14,7 +14,7 @@
 /*
 * Enable rpmsg
 */
-&rpmsg{
+&rpmsg {
 	status = "okay";
 };
 
