@@ -2,13 +2,13 @@
  * Copyright 2021 Amotus Solutions Inc.
  */
 
-#include "imx8mq-var-dart-dt8mcustomboard-legacy.dtsi"
-#include "imx8mq-var-dart-wifi.dtsi"
+#include "imx8mq-var-dart-dt8mcustomboard-legacy-wifi-hdmi.dts"
 #include "imx8mq-var-dart-dt8mcustomboard-m4.dtsi"
 
 / {
-	model = "Diamentis Devkit on Variscite DART-MX8M DT8MCustomBoard 1.x";
-
+	/* WARNING: Be carefull here, the active board features are
+	encoded in this string. */
+	model = "Diamentis DART-MX8M on DT8MCustomBoard 1.x M4+WIFI+HDMI";
 };
 
 /*
