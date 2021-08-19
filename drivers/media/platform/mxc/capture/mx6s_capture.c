@@ -50,7 +50,11 @@
 #define MX6S_CAM_VERSION "0.0.1"
 #define MX6S_CAM_DRIVER_DESCRIPTION "i.MX6S_CSI"
 
-#define MAX_VIDEO_MEM 64
+/*
+ * Increase the video memory size to 120 so that we
+ * get upto 6 buffers for 13MP.
+ */
+#define MAX_VIDEO_MEM 120
 
 /* reset values */
 #define CSICR1_RESET_VAL	0x40000800
@@ -131,6 +135,7 @@
 #define BIT_CSI_ENABLE			(0x1 << 31)
 #define BIT_MIPI_DATA_FORMAT_RAW8		(0x2a << 25)
 #define BIT_MIPI_DATA_FORMAT_RAW10		(0x2b << 25)
+#define BIT_MIPI_DATA_FORMAT_RAW12 (0x2c << 25)
 #define BIT_MIPI_DATA_FORMAT_YUV422_8B	(0x1e << 25)
 #define BIT_MIPI_DATA_FORMAT_MASK	(0x3F << 25)
 #define BIT_MIPI_DATA_FORMAT_OFFSET	25
@@ -243,29 +248,46 @@ struct mx6s_fmt {
 
 static struct mx6s_fmt formats[] = {
 	{
-		.name		= "UYVY-16",
-		.fourcc		= V4L2_PIX_FMT_UYVY,
-		.pixelformat	= V4L2_PIX_FMT_UYVY,
-		.mbus_code	= MEDIA_BUS_FMT_UYVY8_2X8,
-		.bpp		= 2,
-	}, {
-		.name		= "YUYV-16",
-		.fourcc		= V4L2_PIX_FMT_YUYV,
-		.pixelformat	= V4L2_PIX_FMT_YUYV,
-		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
-		.bpp		= 2,
-	}, {
-		.name		= "YUV32 (X-Y-U-V)",
-		.fourcc		= V4L2_PIX_FMT_YUV32,
-		.pixelformat	= V4L2_PIX_FMT_YUV32,
-		.mbus_code	= MEDIA_BUS_FMT_AYUV8_1X32,
-		.bpp		= 4,
-	}, {
-		.name		= "RAWRGB8 (SBGGR8)",
-		.fourcc		= V4L2_PIX_FMT_SBGGR8,
-		.pixelformat	= V4L2_PIX_FMT_SBGGR8,
-		.mbus_code	= MEDIA_BUS_FMT_SBGGR8_1X8,
-		.bpp		= 1,
+		.name = "GREY8 (Y8)",
+		.fourcc = V4L2_PIX_FMT_GREY,
+		.pixelformat = V4L2_PIX_FMT_GREY,
+		.mbus_code = MEDIA_BUS_FMT_Y8_1X8,
+		.bpp = 1,
+	},
+	{
+		.name = "GRAY16 (Y16)",
+		.fourcc = V4L2_PIX_FMT_Y16,
+		.pixelformat = V4L2_PIX_FMT_Y16,
+		.mbus_code = MEDIA_BUS_FMT_Y10_1X10,
+		.bpp = 2,
+	},
+	{
+		.name = "UYVY-16",
+		.fourcc = V4L2_PIX_FMT_UYVY,
+		.pixelformat = V4L2_PIX_FMT_UYVY,
+		.mbus_code = MEDIA_BUS_FMT_UYVY8_2X8,
+		.bpp = 2,
+	},
+	{
+		.name = "YUYV-16",
+		.fourcc = V4L2_PIX_FMT_YUYV,
+		.pixelformat = V4L2_PIX_FMT_YUYV,
+		.mbus_code = MEDIA_BUS_FMT_YUYV8_2X8,
+		.bpp = 2,
+	},
+	{
+		.name = "YUV32 (X-Y-U-V)",
+		.fourcc = V4L2_PIX_FMT_YUV32,
+		.pixelformat = V4L2_PIX_FMT_YUV32,
+		.mbus_code = MEDIA_BUS_FMT_AYUV8_1X32,
+		.bpp = 4,
+	},
+	{
+		.name = "RAWRGB8 (SBGGR8)",
+		.fourcc = V4L2_PIX_FMT_SBGGR8,
+		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+		.mbus_code = MEDIA_BUS_FMT_SBGGR8_1X8,
+		.bpp = 1,
 	}
 };
 
@@ -340,6 +362,7 @@ struct mx6s_csi_dev {
 
 	bool csi_mipi_mode;
 	bool csi_two_8bit_sensor_mode;
+	bool ov2311_csi_bridge;
 	const struct mx6s_csi_soc *soc;
 	struct mx6s_csi_mux csi_mux;
 };
@@ -580,8 +603,13 @@ static void csi_dmareq_rff_enable(struct mx6s_csi_dev *csi_dev)
 	cr3 |= BIT_HRESP_ERR_EN;
 	cr3 &= ~BIT_RXFF_LEVEL;
 	cr3 |= 0x2 << 4;
-	if (csi_dev->csi_two_8bit_sensor_mode)
+
+	if (csi_dev->csi_two_8bit_sensor_mode &&
+	    (csi_dev->fmt->pixelformat != V4L2_PIX_FMT_GREY)) {
 		cr3 |= BIT_TWO_8BIT_SENSOR;
+	} else {
+		cr3 &= ~BIT_TWO_8BIT_SENSOR;
+	}
 
 	__raw_writel(cr3, csi_dev->regbase + CSI_CSICR3);
 	__raw_writel(cr2, csi_dev->regbase + CSI_CSICR2);
@@ -838,6 +866,7 @@ static int mx6s_configure_csi(struct mx6s_csi_dev *csi_dev)
 	switch (csi_dev->fmt->pixelformat) {
 	case V4L2_PIX_FMT_YUV32:
 	case V4L2_PIX_FMT_SBGGR8:
+	case V4L2_PIX_FMT_GREY:
 		width = pix->width;
 		break;
 	case V4L2_PIX_FMT_UYVY:
@@ -847,6 +876,9 @@ static int mx6s_configure_csi(struct mx6s_csi_dev *csi_dev)
 		else
 			/* For parallel 8-bit sensor input */
 			width = pix->width * 2;
+		break;
+	case V4L2_PIX_FMT_Y16:
+		width = pix->width;
 		break;
 	default:
 		pr_debug("   case not supported\n");
@@ -865,11 +897,26 @@ static int mx6s_configure_csi(struct mx6s_csi_dev *csi_dev)
 
 		switch (csi_dev->fmt->pixelformat) {
 		case V4L2_PIX_FMT_UYVY:
+			if (csi_dev->ov2311_csi_bridge) {
+				cr18 &= ~BIT_MIPI_DOUBLE_CMPNT;
+				cr18 &= ~BIT_MIPI_YU_SWAP;
+			}
+			cr18 |= BIT_MIPI_DATA_FORMAT_YUV422_8B;
+			break;
 		case V4L2_PIX_FMT_YUYV:
+			if (csi_dev->ov2311_csi_bridge) {
+				cr18 |= BIT_MIPI_DOUBLE_CMPNT;
+
+				cr18 |= BIT_MIPI_YU_SWAP;
+			}
 			cr18 |= BIT_MIPI_DATA_FORMAT_YUV422_8B;
 			break;
 		case V4L2_PIX_FMT_SBGGR8:
+		case V4L2_PIX_FMT_GREY:
 			cr18 |= BIT_MIPI_DATA_FORMAT_RAW8;
+			break;
+		case V4L2_PIX_FMT_Y16:
+			cr18 |= BIT_MIPI_DATA_FORMAT_RAW10;
 			break;
 		default:
 			pr_debug("   fmt not supported\n");
@@ -1183,6 +1230,11 @@ static int mx6s_csi_open(struct file *file)
 	if (mutex_lock_interruptible(&csi_dev->lock))
 		return -ERESTARTSYS;
 
+	ret = v4l2_fh_open(file);
+	if (ret || !v4l2_fh_is_singular_file(file)) {
+		goto unlock;
+	}
+
 	if (csi_dev->open_count++ == 0) {
 		q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 		q->io_modes = VB2_MMAP | VB2_USERPTR;
@@ -1217,8 +1269,16 @@ static int mx6s_csi_close(struct file *file)
 {
 	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
 	struct v4l2_subdev *sd = csi_dev->sd;
-
+	int ret, is_singular;
 	mutex_lock(&csi_dev->lock);
+
+	is_singular = v4l2_fh_is_singular_file(file);
+	ret = _vb2_fop_release(file, NULL);
+
+	if (!is_singular) {
+		mutex_unlock(&csi_dev->lock);
+		return ret;
+	}
 
 	if (--csi_dev->open_count == 0) {
 		vb2_queue_release(&csi_dev->vb2_vidq);
@@ -1286,12 +1346,18 @@ static struct v4l2_file_operations mx6s_csi_fops = {
 static int mx6s_vidioc_enum_input(struct file *file, void *priv,
 				 struct v4l2_input *inp)
 {
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+
 	if (inp->index != 0)
 		return -EINVAL;
 
 	/* default is camera */
 	inp->type = V4L2_INPUT_TYPE_CAMERA;
 	strcpy(inp->name, "Camera");
+
+	if (!v4l2_subdev_has_op(sd, video, s_std))
+		inp->capabilities &= ~V4L2_IN_CAP_STD;
 
 	return 0;
 }
@@ -1347,16 +1413,19 @@ static int mx6s_vidioc_querybuf(struct file *file, void *priv,
 {
 	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
 	int ret;
-
+	struct vb2_buffer *vb = csi_dev->vb2_vidq.bufs[p->index];
 	WARN_ON(priv != file->private_data);
 
 	ret = vb2_querybuf(&csi_dev->vb2_vidq, p);
 
 	if (!ret) {
 		/* return physical address */
-		struct vb2_buffer *vb = csi_dev->vb2_vidq.bufs[p->index];
 		if (p->flags & V4L2_BUF_FLAG_MAPPED)
 			p->m.offset = vb2_dma_contig_plane_dma_addr(vb, 0);
+	}
+	if (vb2_plane_vaddr(vb, 0)) {
+		memset((void *)vb2_plane_vaddr(vb, 0), 0x80,
+		       csi_dev->pix.sizeimage);
 	}
 	return ret;
 }
@@ -1486,23 +1555,36 @@ static int mx6s_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 				    struct v4l2_format *f)
 {
 	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
-	struct mx6s_fmt *fmt6s = NULL;
+	int ret;
+
+	struct v4l2_subdev *sd = csi_dev->sd;
+	struct v4l2_subdev_format format = {
+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+	};
 
 	WARN_ON(priv != file->private_data);
 
-	f->fmt.pix = csi_dev->pix;
-	fmt6s = format_by_mbus(csi_dev->mbus_code);
+	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &format);
+	if (ret) {
+		pr_info("Error in getting format. ret = %d\n", ret);
+		return ret;
+	} else {
+		struct v4l2_pix_format *pix = &csi_dev->pix;
+		struct mx6s_fmt *fmt;
 
-	if (fmt6s != NULL) {
-		f->fmt.pix.pixelformat = fmt6s->pixelformat;
-		csi_dev->pix.pixelformat = fmt6s->pixelformat;
+		v4l2_fill_pix_format(pix, &format.format);
+		if (pix->field != V4L2_FIELD_INTERLACED)
+			pix->field = V4L2_FIELD_NONE;
+
+		fmt = format_by_mbus(format.format.code);
+		if (fmt == NULL)
+			return -EINVAL;
+
+		pix->pixelformat = fmt->pixelformat;
+		pix->sizeimage = fmt->bpp * pix->height * pix->width;
+		pix->bytesperline = fmt->bpp * pix->width;
 	}
-
-	f->fmt.pix.width = csi_dev->pix.width;
-	f->fmt.pix.height = csi_dev->pix.height;
-	f->fmt.pix.sizeimage = csi_dev->pix.sizeimage;
-	f->fmt.pix.field = csi_dev->pix.field;
-	f->type = csi_dev->type;
+	f->fmt.pix = csi_dev->pix;
 	return 0;
 }
 
@@ -1631,6 +1713,90 @@ static int mx6s_vidioc_s_parm(struct file *file, void *priv,
 	return v4l2_subdev_call(sd, video, s_parm, a);
 }
 
+static int mx6s_vidioc_queryctrl(struct file *file, void *fh,
+				 struct v4l2_queryctrl *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, queryctrl, a);
+}
+
+static int mx6s_vidioc_query_ext_ctrl(struct file *file, void *fh,
+				      struct v4l2_query_ext_ctrl *qec)
+{
+	struct v4l2_queryctrl qc = { .id = qec->id };
+	int ret;
+
+	ret = mx6s_vidioc_queryctrl(file, fh, &qc);
+
+	if (ret)
+		return ret;
+
+	qec->id = qc.id;
+	qec->type = qc.type;
+	strlcpy(qec->name, qc.name, sizeof(qec->name));
+	qec->maximum = qc.maximum;
+	qec->minimum = qc.minimum;
+	qec->step = qc.step;
+	qec->default_value = qc.default_value;
+	qec->flags = qc.flags;
+	qec->elem_size = 4;
+	qec->elems = 1;
+	qec->nr_of_dims = 0;
+	memset(qec->dims, 0, sizeof(qec->dims));
+	memset(qec->reserved, 0, sizeof(qec->reserved));
+
+	return 0;
+}
+
+static int mx6s_vidioc_g_ext_ctrls(struct file *file, void *fh,
+				   struct v4l2_ext_controls *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, g_ext_ctrls, a);
+}
+
+static int mx6s_vidioc_try_ext_ctrls(struct file *file, void *fh,
+				     struct v4l2_ext_controls *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, try_ext_ctrls, a);
+}
+
+static int mx6s_vidioc_s_ext_ctrls(struct file *file, void *fh,
+				   struct v4l2_ext_controls *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, s_ext_ctrls, a);
+}
+
+static int mx6s_vidioc_querymenu(struct file *file, void *fh,
+				 struct v4l2_querymenu *qm)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, querymenu, qm);
+}
+
+static int mx6s_vidioc_g_ctrl(struct file *file, void *fh,
+			      struct v4l2_control *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, g_ctrl, a);
+}
+
+static int mx6s_vidioc_s_ctrl(struct file *file, void *fh,
+			      struct v4l2_control *a)
+{
+	struct mx6s_csi_dev *csi_dev = video_drvdata(file);
+	struct v4l2_subdev *sd = csi_dev->sd;
+	return v4l2_subdev_call(sd, core, s_ctrl, a);
+}
+
 static int mx6s_vidioc_enum_framesizes(struct file *file, void *priv,
 					 struct v4l2_frmsizeenum *fsize)
 {
@@ -1644,6 +1810,10 @@ static int mx6s_vidioc_enum_framesizes(struct file *file, void *priv,
 	int ret;
 
 	fmt = format_by_fourcc(fsize->pixel_format);
+
+	if (fmt == NULL)
+		return -EINVAL;
+
 	if (fmt->pixelformat != fsize->pixel_format)
 		return -EINVAL;
 	fse.code = fmt->mbus_code;
@@ -1686,6 +1856,10 @@ static int mx6s_vidioc_enum_frameintervals(struct file *file, void *priv,
 	int ret;
 
 	fmt = format_by_fourcc(interval->pixel_format);
+
+	if (fmt == NULL)
+		return -EINVAL;
+
 	if (fmt->pixelformat != interval->pixel_format)
 		return -EINVAL;
 	fie.code = fmt->mbus_code;
@@ -1699,31 +1873,39 @@ static int mx6s_vidioc_enum_frameintervals(struct file *file, void *priv,
 }
 
 static const struct v4l2_ioctl_ops mx6s_csi_ioctl_ops = {
-	.vidioc_querycap          = mx6s_vidioc_querycap,
-	.vidioc_enum_fmt_vid_cap  = mx6s_vidioc_enum_fmt_vid_cap,
-	.vidioc_try_fmt_vid_cap   = mx6s_vidioc_try_fmt_vid_cap,
-	.vidioc_g_fmt_vid_cap     = mx6s_vidioc_g_fmt_vid_cap,
-	.vidioc_s_fmt_vid_cap     = mx6s_vidioc_s_fmt_vid_cap,
-	.vidioc_g_pixelaspect     = mx6s_vidioc_g_pixelaspect,
-	.vidioc_s_selection   = mx6s_vidioc_s_selection,
-	.vidioc_g_selection   = mx6s_vidioc_g_selection,
-	.vidioc_reqbufs       = mx6s_vidioc_reqbufs,
-	.vidioc_querybuf      = mx6s_vidioc_querybuf,
-	.vidioc_qbuf          = mx6s_vidioc_qbuf,
-	.vidioc_dqbuf         = mx6s_vidioc_dqbuf,
-	.vidioc_g_std         = mx6s_vidioc_g_std,
-	.vidioc_s_std         = mx6s_vidioc_s_std,
-	.vidioc_querystd      = mx6s_vidioc_querystd,
-	.vidioc_enum_input    = mx6s_vidioc_enum_input,
-	.vidioc_g_input       = mx6s_vidioc_g_input,
-	.vidioc_s_input       = mx6s_vidioc_s_input,
-	.vidioc_expbuf        = mx6s_vidioc_expbuf,
-	.vidioc_streamon      = mx6s_vidioc_streamon,
-	.vidioc_streamoff     = mx6s_vidioc_streamoff,
-	.vidioc_g_parm        = mx6s_vidioc_g_parm,
-	.vidioc_s_parm        = mx6s_vidioc_s_parm,
+	.vidioc_querycap = mx6s_vidioc_querycap,
+	.vidioc_enum_fmt_vid_cap = mx6s_vidioc_enum_fmt_vid_cap,
+	.vidioc_try_fmt_vid_cap = mx6s_vidioc_try_fmt_vid_cap,
+	.vidioc_g_fmt_vid_cap = mx6s_vidioc_g_fmt_vid_cap,
+	.vidioc_s_fmt_vid_cap = mx6s_vidioc_s_fmt_vid_cap,
+	.vidioc_g_pixelaspect = mx6s_vidioc_g_pixelaspect,
+	.vidioc_s_selection = mx6s_vidioc_s_selection,
+	.vidioc_g_selection = mx6s_vidioc_g_selection,
+	.vidioc_reqbufs = mx6s_vidioc_reqbufs,
+	.vidioc_querybuf = mx6s_vidioc_querybuf,
+	.vidioc_qbuf = mx6s_vidioc_qbuf,
+	.vidioc_dqbuf = mx6s_vidioc_dqbuf,
+	.vidioc_g_std = mx6s_vidioc_g_std,
+	.vidioc_s_std = mx6s_vidioc_s_std,
+	.vidioc_querystd = mx6s_vidioc_querystd,
+	.vidioc_enum_input = mx6s_vidioc_enum_input,
+	.vidioc_g_input = mx6s_vidioc_g_input,
+	.vidioc_s_input = mx6s_vidioc_s_input,
+	.vidioc_expbuf = mx6s_vidioc_expbuf,
+	.vidioc_streamon = mx6s_vidioc_streamon,
+	.vidioc_streamoff = mx6s_vidioc_streamoff,
+	.vidioc_g_parm = mx6s_vidioc_g_parm,
+	.vidioc_s_parm = mx6s_vidioc_s_parm,
 	.vidioc_enum_framesizes = mx6s_vidioc_enum_framesizes,
 	.vidioc_enum_frameintervals = mx6s_vidioc_enum_frameintervals,
+	.vidioc_queryctrl = mx6s_vidioc_queryctrl,
+	.vidioc_query_ext_ctrl = mx6s_vidioc_query_ext_ctrl,
+	.vidioc_querymenu = mx6s_vidioc_querymenu,
+	.vidioc_g_ctrl = mx6s_vidioc_g_ctrl,
+	.vidioc_s_ctrl = mx6s_vidioc_s_ctrl,
+	.vidioc_g_ext_ctrls = mx6s_vidioc_g_ext_ctrls,
+	.vidioc_s_ext_ctrls = mx6s_vidioc_s_ext_ctrls,
+	.vidioc_try_ext_ctrls = mx6s_vidioc_try_ext_ctrls
 };
 
 static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
@@ -1914,6 +2096,12 @@ static int mx6s_csi_probe(struct platform_device *pdev)
 
 	mx6s_csi_mode_sel(csi_dev);
 	mx6s_csi_two_8bit_sensor_mode_sel(csi_dev);
+
+	/*
+	 * Add a flag to identify the OV2311 device tree
+	 */
+	csi_dev->ov2311_csi_bridge = of_property_read_bool(
+		csi_dev->dev->of_node, "ov2311-csi-bridge");
 
 	of_id = of_match_node(mx6s_csi_dt_ids, csi_dev->dev->of_node);
 	if (!of_id)
