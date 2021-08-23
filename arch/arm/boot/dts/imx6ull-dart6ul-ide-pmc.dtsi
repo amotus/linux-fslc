@@ -250,7 +250,7 @@
 /* 	pinctrl-names = "default"; */
 /* 	pinctrl-0 = <&pinctrl_uart4>; */
 /* 	linux,rs485-enabled-at-boot-time; */
-/* 	uart-has-rtscts; */
+/* 	/\* uart-has-rtscts; *\/ */
 /* 	fsl,dte-mode; */
 /* 	status = "okay"; */
 /* }; */
@@ -405,6 +405,7 @@
 	/* 	MX6UL_PAD_LCD_CLK__UART4_DTE_RX         0x1b0b1 /\* J1-49 *\/ */
 	/* 	MX6UL_PAD_LCD_ENABLE__UART4_DTE_TX      0x1b0b1 /\* J1-50 *\/ */
 	/* 	MX6UL_PAD_LCD_HSYNC__UART4_DTE_RTS      0x1b0b1 /\* J1-54 *\/ */
+	/* 	MX6UL_PAD_LCD_VSYNC__UART4_DTE_CTS      0x1b0b1	/\* J1-52 *\/ */
 	/* 	>; */
 	/* }; */
 
@@ -413,6 +414,7 @@
 	/* 	MX6UL_PAD_CSI_DATA00__UART5_DTE_RX      0x1b0b1 /\* J1-88 *\/ */
 	/* 	MX6UL_PAD_CSI_DATA01__UART5_DTE_TX      0x1b0b1 /\* J1-80 *\/ */
 	/* 	MX6UL_PAD_CSI_DATA03__UART5_DTE_RTS     0x1b0b1 /\* J2-42 *\/ */
+	/* 	MX6UL_PAD_CSI_DATA02__UART5_DTE_CTS     0x1b0b1 /\* J1-90 *\/ */
 	/* 	>; */
 	/* }; */
 
