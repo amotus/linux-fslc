@@ -314,14 +314,32 @@ static const struct csis_pix_format mipi_csis_formats[] = {
 		.code = MEDIA_BUS_FMT_YUYV8_2X8,
 		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_YCBCR422_8BIT,
 		.data_alignment = 16,
-	}, {
+	},
+	{
 		.code = MEDIA_BUS_FMT_VYUY8_2X8,
 		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_YCBCR422_8BIT,
 		.data_alignment = 16,
-	}, {
+	},
+	{
+		.code = MEDIA_BUS_FMT_UYVY8_2X8,
+		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_YCBCR422_8BIT,
+		.data_alignment = 16,
+
+	},
+	{
 		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
 		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_RAW8,
 		.data_alignment = 8,
+	},
+	{
+		.code = MEDIA_BUS_FMT_Y8_1X8,
+		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_RAW8,
+		.data_alignment = 8,
+	},
+	{
+		.code = MEDIA_BUS_FMT_Y10_1X10,
+		.fmt_reg = MIPI_CSIS_ISPCFG_FMT_RAW10,
+		.data_alignment = 16,
 	}
 };
 
@@ -509,6 +527,7 @@ static void mipi_csis_set_params(struct csi_state *state)
 		val |= MIPI_CSIS_ISPCFG_ALIGN_32BIT;
 	else /* Normal output */
 		val &= ~MIPI_CSIS_ISPCFG_ALIGN_32BIT;
+	val |= 1 << 12; /* Dual Pixel Mode */
 	mipi_csis_write(state, MIPI_CSIS_ISPCONFIG_CH0, val);
 
 	val = (0 << MIPI_CSIS_ISPSYNC_HSYNC_LINTV_OFFSET) |
@@ -663,7 +682,60 @@ static void mipi_csis_log_counters(struct csi_state *state, bool non_errors)
 
 /*
  * V4L2 subdev operations
+ *
+ * NOTE: The control related ioctls have been introduced as a work around to
+ * support controls. The proper way to support controls is via the control
+ * handler API.
  */
+static int mipi_csis_querymenu(struct v4l2_subdev *mipi_sd,
+			       struct v4l2_querymenu *qm)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, querymenu, qm);
+}
+
+static int mipi_csis_queryctrl(struct v4l2_subdev *mipi_sd,
+			       struct v4l2_queryctrl *qc)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, queryctrl, qc);
+}
+
+static int mipi_csis_g_ctrl(struct v4l2_subdev *mipi_sd,
+			    struct v4l2_control *ctrl)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, g_ctrl, ctrl);
+}
+
+static int mipi_csis_s_ctrl(struct v4l2_subdev *mipi_sd,
+			    struct v4l2_control *ctrl)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, s_ctrl, ctrl);
+}
+
+static int mipi_csis_g_ext_ctrls(struct v4l2_subdev *mipi_sd,
+				 struct v4l2_ext_controls *ctrls)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, g_ext_ctrls, ctrls);
+}
+
+static int mipi_csis_try_ext_ctrls(struct v4l2_subdev *mipi_sd,
+				   struct v4l2_ext_controls *ctrls)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, try_ext_ctrls, ctrls);
+}
+
+static int mipi_csis_s_ext_ctrls(struct v4l2_subdev *mipi_sd,
+				 struct v4l2_ext_controls *ctrls)
+{
+	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
+	return v4l2_subdev_call(state->sensor_sd, core, s_ext_ctrls, ctrls);
+}
+
 static int mipi_csis_s_power(struct v4l2_subdev *mipi_sd, int on)
 {
 	struct csi_state *state = mipi_sd_to_csi_state(mipi_sd);
@@ -855,6 +927,13 @@ static int mipi_csis_log_status(struct v4l2_subdev *mipi_sd)
 
 static struct v4l2_subdev_core_ops mipi_csis_core_ops = {
 	.s_power = mipi_csis_s_power,
+	.queryctrl = mipi_csis_queryctrl,
+	.g_ctrl = mipi_csis_g_ctrl,
+	.s_ctrl = mipi_csis_s_ctrl,
+	.g_ext_ctrls = mipi_csis_g_ext_ctrls,
+	.s_ext_ctrls = mipi_csis_s_ext_ctrls,
+	.try_ext_ctrls = mipi_csis_try_ext_ctrls,
+	.querymenu = mipi_csis_querymenu,
 	.log_status = mipi_csis_log_status,
 };
 
@@ -1073,7 +1152,7 @@ static int mipi_csis_probe(struct platform_device *pdev)
 	const struct of_device_id *of_id;
 	mipi_csis_phy_reset_t phy_reset_fn;
 	int ret = -ENOMEM;
-
+	dev_err(&pdev->dev, "%s%d\n", __func__, ret);
 	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
 	if (!state)
 		return -ENOMEM;
