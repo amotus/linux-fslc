@@ -9,6 +9,14 @@
 	/* WARNING: Be carefull here, the active board features are
 	encoded in this string. */
 	model = "Diamentis DART-MX8M on DT8MCustomBoard 1.x M4+WIFI+HDMI";
+
+	/* 
+	 * sound-hdmi is enabled by imx8mm-var-dart-dt8mcustomboard-hdmi.dtsi, make sure it stays
+	 * disabled.
+	 */
+	sound-hdmi {
+		status = "disabled";
+	};
 };
 
 /*
