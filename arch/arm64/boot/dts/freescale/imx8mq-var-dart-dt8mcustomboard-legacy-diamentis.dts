@@ -56,6 +56,9 @@
 
 &gpio5 {
 	/* disable BT buffer/level shifter */
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_bt>;
+
 	bt-en {
 		gpio-hog;
 		gpios = <5 GPIO_ACTIVE_LOW>;
@@ -118,6 +121,12 @@
 		MX8MQ_IOMUXC_SAI5_RXD0_GPIO3_IO21		0x1b
 		MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22		0x1b
 		MX8MQ_IOMUXC_SAI5_RXD2_GPIO3_IO23		0x1b
+		>;
+	};
+
+	pinctrl_bt: btgrp {
+		fsl,pins = <
+		MX8MQ_IOMUXC_SPDIF_EXT_CLK_GPIO5_IO5		0x16	
 		>;
 	};
 };
