@@ -285,8 +285,10 @@ static int mcu_get_fw_version(struct i2c_client *client, unsigned char *fw_versi
 	}
 
 	for (loop = 0 ; loop < VERSION_SIZE ; loop++ )
+	{	
+		//printk(" fw version : 0x%x \n", mc_ret_data[2+loop]);
 		*(fw_version+loop) = mc_ret_data[2+loop];
-
+	}
 	ret = ERRCODE_SUCCESS;
 exit:
 	/* unlock semaphore */
@@ -3342,15 +3344,39 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 		dev_err(&client->dev, "%s: Invalid I2C client parameter\n", __func__);
 		return -EINVAL;
 	}
-
+	
+	
 	toggle_gpio(pwdn_gpio, 0);
-	msleep(1);
+	msleep(100);
 	toggle_gpio(reset_gpio, 0);
-	msleep(1);
+	msleep(10);
 	toggle_gpio(reset_gpio, 1);
 	msleep(100);
 
 #if 1
+	int loop =0;
+
+	for(loop = 0; loop < 10; loop++) {
+			ret = mcu_get_fw_version(client, fw_version);
+			//printk("ret : %d loop : %d \n", ret, loop);
+			if (ret == 0)
+			{
+				ret	= mcu_verify_fw_version(fw_version);
+			}
+
+			if (ret < 0) {
+				printk(" ret<0 \n");
+				msleep(1);
+				continue;
+			} else {
+#ifdef ov2311_DEBUG
+				pr_info(" Get FW Version Success\n");
+#endif
+				break;
+			}
+		}
+#else
+
 	ret = mcu_get_fw_version(client, fw_version);
 
 	if (ret == 0)
@@ -3364,7 +3390,7 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 			"Could not read the firmware version from the MCU\n"
 		);
 	}
-
+#endif 
 	/*
 	 * Try booting and flashing in bootloader mode when an error is detected
 	 * or the force update bit is set in the firmware version
@@ -3382,11 +3408,11 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 #endif
 
 		toggle_gpio(reset_gpio, 0);
-		msleep(1);
+		msleep(10);
 		toggle_gpio(pwdn_gpio, 1);
-		msleep(1);
+		msleep(100);
 		toggle_gpio(reset_gpio, 1);
-		msleep(1);
+		msleep(100);
 
 		for(loop = 0; loop < 10; loop++) {
 			ret = mcu_bload_get_version(client);
@@ -3428,6 +3454,7 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 		 *   when the `mcu_fw_update` function returns successfully?
 		 */
 		for(loop = 0; loop < 100; loop++) {
+			
 			ret = mcu_get_fw_version(client, fw_version);
 
 			if (ret == 0)
@@ -3457,7 +3484,6 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 			pr_info("Firmware has been updated successfully.\n");
 		}
 	}
-#endif 
 //	dev_info(&client->dev, "Current Firmware Version - (%.32s)\n", fw_version);
 
 	return ret;
@@ -3791,9 +3817,7 @@ static int ov2311_probe(struct i2c_client *client,
 				.value = mcu_ctrl_info[i].ctrl_data.std.ctrl_def
 			};
 
-			if (
-				mcu_ctrl_info[i].ctrl_id == 0x9a0926 
-			)
+			if ((mcu_ctrl_info[i].ctrl_id == 0x9a0926) || (mcu_ctrl_info[i].ctrl_id == 0x9a092b))
 			{
 				/*
 				 * We know that the MCU would fail when we
