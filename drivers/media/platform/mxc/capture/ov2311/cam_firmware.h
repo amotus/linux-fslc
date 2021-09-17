@@ -4,8 +4,8 @@
 /*   Local Defines */
 #define MAX_BUF_LEN 2048
 
-#define MAX_PAGES 			512
-#define TOTAL_PAGES 		1536
+#define MAX_PAGES 			510
+#define TOTAL_PAGES 		1530
 #define NUM_ERASE_CYCLES	(TOTAL_PAGES / MAX_PAGES)
 
 #define FLASH_START_ADDRESS 0x08000000

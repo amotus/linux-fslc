@@ -122,6 +122,9 @@ typedef enum _cmd_id {
 	/* Reserved - 0x17 to 0xFE (except 0x43) */
 	CMD_ID_LANE_CONFIG = 0x17,
 	CMD_ID_MIPI_CLK_CONFIG = 0x18,
+	
+	CMD_ID_STORAGE_WRITE =0x19, 	
+	CMD_ID_STORAGE_READ = 0x20, 
 
 	CMD_ID_UNKNOWN = 0xFF,
 
@@ -235,6 +238,9 @@ enum _ap1302_custom_ctrl {
 	V4L2_CID_LSCMODE,
 	V4L2_CID_FOCUS_WINDOW,
 	V4L2_CID_EXPOSURE_COMPENSATION,
+
+	V4L2_CID_GET_SPIDATA = 0x20,
+	V4L2_CID_SET_SPIDATA = 0x19,
 };
 
 struct ov2311 {
@@ -299,6 +305,14 @@ struct ov2311 {
 	struct v4l2_ctrl *ctrls[];
 };
 
+
+typedef struct _spi_read_write {
+	__u16 index;
+	__u16 size;
+	char data[512];
+}SPI_READ_WRITE;
+
+
 static ISP_STREAM_INFO *stream_info = NULL;
 static ISP_CTRL_INFO *mcu_ctrl_info = NULL;
 
@@ -338,5 +352,9 @@ static int mcu_get_ctrl_ui(struct i2c_client *client,
 static int mcu_fw_update(struct i2c_client *client, unsigned char *txt_fw_version);
 static int mcu_isp_power_down(struct i2c_client *client);
 static int mcu_isp_power_wakeup(struct i2c_client *client);
+
+static int mcu_read_spidata(struct i2c_client *client,
+	   uint16_t index, uint16_t size, uint8_t *buffer);
+static int mcu_write_spidata(struct i2c_client *client, uint16_t index, uint16_t size, uint8_t *buffer);
 
 #endif				/* __ov2311_TABLES__ */
