@@ -285,8 +285,10 @@ static int mcu_get_fw_version(struct i2c_client *client, unsigned char *fw_versi
 	}
 
 	for (loop = 0 ; loop < VERSION_SIZE ; loop++ )
+	{	
+		//printk(" fw version : 0x%x \n", mc_ret_data[2+loop]);
 		*(fw_version+loop) = mc_ret_data[2+loop];
-
+	}
 	ret = ERRCODE_SUCCESS;
 exit:
 	/* unlock semaphore */
@@ -495,8 +497,352 @@ static int mcu_bload_erase_flash(struct i2c_client *client)
 
 	/* ------------ ERASE FLASH END ----------------------- */
 
+	/* --------------- FW VERSION ERASE FLASH --------------------- */
+
+		checksum = 0x00;
+		/*   Write Erase Pages CMD */
+		g_bload_buf[0] = BL_ERASE_MEM_NS;
+		g_bload_buf[1] = ~(BL_ERASE_MEM_NS);
+
+		ret = ov2311_write(client, g_bload_buf, 2);
+		if (ret < 0) {
+			dev_err(&client->dev,"Write Failed \n");
+			return -1;
+		}
+
+		/*   Wait for ACK or NACK */
+		ret = ov2311_read(client, g_bload_buf, 1);
+		if (ret < 0) {
+			dev_err(&client->dev,"Read Failed \n");
+			return -1;
+		}
+
+		if (g_bload_buf[0] != RESP_ACK) {
+			/*   NACK Received */
+			dev_err(&client->dev," NACK Received... exiting.. \n");
+			return -1;
+		}
+
+		g_bload_buf[0] = (1 - 1) >> 8;
+		g_bload_buf[1] = (1 - 1) & 0xFF;
+		g_bload_buf[2] = g_bload_buf[0] ^ g_bload_buf[1];
+
+		ret = ov2311_write(client, g_bload_buf, 3);
+		if (ret < 0) {
+			dev_err(&client->dev,"Write Failed \n");
+			return -1;
+		}
+
+		/*   Wait for ACK or NACK */
+		ret = ov2311_read(client, g_bload_buf, 1);
+		if (ret < 0) {
+			dev_err(&client->dev,"Read Failed \n");
+			return -1;
+		}
+
+		if (g_bload_buf[0] != RESP_ACK) {
+			/*   NACK Received */
+			dev_err(&client->dev," NACK Received... exiting.. \n");
+			return -1;
+		}
+
+		//for (pagenum = 0; pagenum < 1; pagenum++) {
+			g_bload_buf[0] =
+			    (1535) >> 8;
+			g_bload_buf[1] =
+			    (1535) & 0xFF;
+			checksum =
+			    checksum ^ g_bload_buf[0] ^
+			    g_bload_buf[1];
+		//}
+		g_bload_buf[2] = checksum;
+
+		ret = ov2311_write(client, g_bload_buf, 3);
+		if (ret < 0) {
+			dev_err(&client->dev,"Write Failed \n");
+			return -1;
+		}
+
+ poll_busyf:
+		/*   Wait for ACK or NACK */
+		ret = ov2311_read(client, g_bload_buf, 1);
+		if (ret < 0) {
+			dev_err(&client->dev,"Read Failed \n");
+			return -1;
+		}
+
+		if (g_bload_buf[0] == RESP_BUSY)
+			goto poll_busyf;
+
+		if (g_bload_buf[0] != RESP_ACK) {
+			/*   NACK Received */
+			dev_err(&client->dev," NACK Received... exiting.. \n");
+			return -1;
+		}
+
+		printk(" ERASE FW VERSION success !! \n");
+
+	/* ------------FW VERSION ERASE FLASH END ----------------------- */
+
+
 	return 0;
 }
+
+
+static int mcu_write_spidata(struct i2c_client *client, uint16_t index, uint16_t size, uint8_t *buffer)
+{
+	uint16_t cmd_status = 0;
+	uint8_t retcode = 0, cmd_id = 0;
+	int ret = 0, retry = 1000, loop = 0;
+	uint32_t payload_len = 0;
+
+	/* Return if camera is streaming */
+
+
+	/* Sanity checks */
+	if(size > 513) {
+		dev_err(&client->dev," %s: Invalid size - %d \n", __func__,  size);
+		return -EINVAL;
+	}
+
+	if(!buffer || !(buffer + size -1)) {
+		dev_err(&client->dev," %s: Invalid buffer address - %d \n", __func__, size);
+		return -EINVAL;
+	}
+
+	/* Zero size handling */
+	if(size == 0) {
+		printk("%s:  Cannot write zero bytes \n", __func__);
+		return 0;
+	}
+
+	
+	pr_info(" Index = 0x%04x, Size = 0x%04x, First Byte = 0x%02x, Last Byte = 0x%02x \n", index, size, buffer[0], buffer[size-1]);
+	
+	mutex_lock(&mcu_i2c_mutex);
+
+issue_cmd:
+
+	payload_len = size + 4;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STORAGE_WRITE;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	ret = ov2311_write(client, mc_data, TX_LEN_PKT);		
+	if (ret != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, ret);
+		ret = -EIO;
+		goto exit;
+	}	
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STORAGE_WRITE;
+	mc_data[2] = (index & 0xFF00) >> 8;
+	mc_data[3] = index & 0xFF;
+	mc_data[4] = (size & 0xFF00) >> 8;
+	mc_data[5] = size & 0xFF;
+
+
+	memcpy(&mc_data[6], buffer, size);
+	mc_data[size + 6] = errorcheck(&mc_data[2], (size + 4));
+
+	ret = ov2311_write(client, mc_data, size + 7);		
+	if (ret != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, ret);
+		ret = -EIO;
+		goto exit;
+	}
+
+	msleep(3000);
+
+	while (--retry > 0) {
+		/* Delay after retry */
+		
+		cmd_id = CMD_ID_STORAGE_WRITE;
+		if (mcu_get_cmd_status
+		    (client, &cmd_id, &cmd_status, &retcode) < 0) {
+			dev_err(&client->dev,
+				" %s(%d) MCU GET CMD Status Error : loop : %d \n",
+				__func__, __LINE__, loop);
+			ret = -EIO;
+			goto exit;
+		}
+
+		if ((cmd_status == MCU_CMD_STATUS_SUCCESS) &&
+		    (retcode == ERRCODE_SUCCESS)) {
+			ret = 0;
+			goto exit;
+		}
+
+		if(retcode == ERRCODE_AGAIN) {
+			/* Issue Command Again if Set */
+			retry = 1000;			
+			goto issue_cmd;
+		}						
+
+		if ((retcode != ERRCODE_BUSY) &&
+		    ((cmd_status != MCU_CMD_STATUS_PENDING))) {
+			dev_err(&client->dev,
+				"(%s) %d Error STATUS = 0x%04x RET = 0x%02x\n",
+				__func__, __LINE__, cmd_status, retcode);
+			ret = -EIO;
+			goto exit;
+		}
+	}
+
+	dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+			__LINE__, ret);
+	ret = -ETIMEDOUT;			
+
+exit:
+	/* unlock semaphore */
+	mutex_unlock(&mcu_i2c_mutex);	
+	return ret;
+}
+
+
+
+static int mcu_read_spidata(struct i2c_client *client,
+	   uint16_t index, uint16_t size, uint8_t *buffer)
+{
+	uint32_t payload_len = 0;
+	uint8_t errcode = ERRCODE_SUCCESS, orig_crc = 0, calc_crc = 0;
+	int ret = 0, err = 0;
+
+	/* Sanity checks */
+	if(size > 512) {
+		dev_err(&client->dev," %s: Invalid size - %d \n", __func__,  size);
+		return -EINVAL;
+	}
+
+	if(!buffer || !(buffer + size -1)) {
+		dev_err(&client->dev," %s: Invalid buffer address\n", __func__);
+		return -EINVAL;
+	}
+
+	/* Zero size handling */
+	if(size == 0) {
+		printk("%s:  Cannot read zero bytes \n", __func__);
+		return 0;
+	}	
+
+	/* lock semaphore */
+	mutex_lock(&mcu_i2c_mutex);
+
+	/* First Txn Payload length = 2 */
+	payload_len = 4;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STORAGE_READ;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	err = ov2311_write(client, mc_data, TX_LEN_PKT);
+	if (err != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, err);
+		ret = -EIO;
+		goto exit;
+	}	
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STORAGE_READ;
+	mc_data[2] = index >> 8;
+	mc_data[3] = index & 0xFF;
+	mc_data[4] = size >> 8;
+	mc_data[5] = size & 0xFF;
+	mc_data[6] = errorcheck(&mc_data[2], 4);
+
+	err = ov2311_write(client, mc_data, 7);
+	if (err != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, err);
+		ret = -EIO;
+		goto exit;
+	}
+
+	msleep(1);
+
+	err = ov2311_read(client, mc_ret_data, RX_LEN_PKT);
+	if (err != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, err);
+		ret = -EIO;
+		goto exit;
+	}
+
+	/* Verify CRC */
+	orig_crc = mc_ret_data[4];
+	calc_crc = errorcheck(&mc_ret_data[2], 2);
+	if (orig_crc != calc_crc) {
+		dev_err(&client->dev," %s(%d) CRC 0x%02x != 0x%02x \n",
+		       __func__, __LINE__, orig_crc, calc_crc);
+		ret = -1;
+		goto exit;
+	}
+
+	if (((mc_ret_data[2] << 8) | mc_ret_data[3]) == 0) {
+		ret = -EIO;
+		goto exit;
+	}
+
+	errcode = mc_ret_data[5];
+	if (errcode != ERRCODE_SUCCESS) {
+		dev_err(&client->dev," %s(%d) Errcode - 0x%02x \n",
+		       __func__, __LINE__, errcode);
+		ret = -EIO;
+		goto exit;
+	}
+
+	payload_len =
+	    ((mc_ret_data[2] << 8) | mc_ret_data[3]) + HEADER_FOOTER_SIZE;
+	memset(mc_ret_data, 0x00, payload_len);
+
+	err = ov2311_read(client, mc_ret_data, payload_len);
+	if (err != 0) {
+		dev_err(&client->dev," %s(%d) Error - %d \n", __func__,
+		       __LINE__, err);
+		ret = -EIO;
+		goto exit;
+	}
+
+	/* Verify CRC */
+	orig_crc = mc_ret_data[payload_len - 2];
+	calc_crc =
+	    errorcheck(&mc_ret_data[2], payload_len - HEADER_FOOTER_SIZE);
+	if (orig_crc != calc_crc) {
+		dev_err(&client->dev," %s(%d) CRC 0x%02x != 0x%02x \n",
+		       __func__, __LINE__, orig_crc, calc_crc);
+		ret = -EINVAL;
+		goto exit;
+	}
+
+	/* Verify Errcode */
+	errcode = mc_ret_data[payload_len - 1];
+	if (errcode != ERRCODE_SUCCESS) {
+		dev_err(&client->dev," %s(%d) Errcode - 0x%02x \n",
+		       __func__, __LINE__, errcode);
+		ret = -EINVAL;
+		goto exit;
+	}
+
+	memcpy(buffer, &mc_ret_data[2], size);
+
+ exit:
+	/* unlock semaphore */
+	mutex_unlock(&mcu_i2c_mutex);
+
+	return ret;
+}
+
+
+
 
 static unsigned char mcu_bload_inv_checksum(unsigned char *buf, int len)
 {
@@ -2846,8 +3192,32 @@ static int ov2311_try_ext_ctrls(struct v4l2_subdev *sd, struct v4l2_ext_controls
 static int ov2311_s_ext_ctrls(struct v4l2_subdev *sd, struct v4l2_ext_controls *ctrls)
 {
 	int i, err = 0;
+	struct i2c_client *client = ov2311_data.i2c_client;
+	SPI_READ_WRITE storage_data;
 	if (sd == NULL || ctrls == NULL)
 		return -EINVAL;
+
+
+	switch(ctrls->controls->id) {
+
+		case V4L2_CID_SET_SPIDATA:
+
+			storage_data.size = ctrls->controls->size;
+			storage_data.index = ctrls->controls->id;
+			err = mcu_write_spidata(client, storage_data.index, storage_data.size, ctrls->controls->ptr);
+			return err;
+
+		case V4L2_CID_GET_SPIDATA:
+
+			storage_data.index = ctrls->controls->id;
+			storage_data.size = ctrls->controls->size;
+			err = mcu_read_spidata(client, storage_data.index, storage_data.size, ctrls->controls->ptr);			
+			return err;
+
+		default:
+		break;
+	}
+
 
 	for (i = 0; i < ctrls->count; i++) {
 		struct v4l2_ext_control *ext_ctrl = ctrls->controls + i;
@@ -3182,8 +3552,9 @@ static int ov2311_set_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config 
 	}
 
 	if(flag == 0) {
-		format->format.width	= ov2311_data.pix.width;
-		format->format.height	= ov2311_data.pix.height;
+		return -EINVAL;	
+		//format->format.width	= ov2311_data.pix.width;
+		//format->format.height	= ov2311_data.pix.height;
 	}
 
 	if (format->which == V4L2_SUBDEV_FORMAT_TRY)
@@ -3342,15 +3713,39 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 		dev_err(&client->dev, "%s: Invalid I2C client parameter\n", __func__);
 		return -EINVAL;
 	}
-
+	
+	
 	toggle_gpio(pwdn_gpio, 0);
-	msleep(1);
+	msleep(100);
 	toggle_gpio(reset_gpio, 0);
-	msleep(1);
+	msleep(10);
 	toggle_gpio(reset_gpio, 1);
 	msleep(100);
 
 #if 1
+	int loop =0;
+
+	for(loop = 0; loop < 10; loop++) {
+			ret = mcu_get_fw_version(client, fw_version);
+			//printk("ret : %d loop : %d \n", ret, loop);
+			if (ret == 0)
+			{
+				ret	= mcu_verify_fw_version(fw_version);
+			}
+
+			if (ret < 0) {
+				printk(" ret<0 \n");
+				msleep(1);
+				continue;
+			} else {
+#ifdef ov2311_DEBUG
+				pr_info(" Get FW Version Success\n");
+#endif
+				break;
+			}
+		}
+#else
+
 	ret = mcu_get_fw_version(client, fw_version);
 
 	if (ret == 0)
@@ -3364,7 +3759,7 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 			"Could not read the firmware version from the MCU\n"
 		);
 	}
-
+#endif 
 	/*
 	 * Try booting and flashing in bootloader mode when an error is detected
 	 * or the force update bit is set in the firmware version
@@ -3382,11 +3777,11 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 #endif
 
 		toggle_gpio(reset_gpio, 0);
-		msleep(1);
+		msleep(10);
 		toggle_gpio(pwdn_gpio, 1);
-		msleep(1);
+		msleep(100);
 		toggle_gpio(reset_gpio, 1);
-		msleep(1);
+		msleep(100);
 
 		for(loop = 0; loop < 10; loop++) {
 			ret = mcu_bload_get_version(client);
@@ -3428,6 +3823,7 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 		 *   when the `mcu_fw_update` function returns successfully?
 		 */
 		for(loop = 0; loop < 100; loop++) {
+			
 			ret = mcu_get_fw_version(client, fw_version);
 
 			if (ret == 0)
@@ -3457,7 +3853,6 @@ static int ov2311_verify_mcu(struct i2c_client *client)
 			pr_info("Firmware has been updated successfully.\n");
 		}
 	}
-#endif 
 //	dev_info(&client->dev, "Current Firmware Version - (%.32s)\n", fw_version);
 
 	return ret;
@@ -3791,9 +4186,7 @@ static int ov2311_probe(struct i2c_client *client,
 				.value = mcu_ctrl_info[i].ctrl_data.std.ctrl_def
 			};
 
-			if (
-				mcu_ctrl_info[i].ctrl_id == 0x9a0926 
-			)
+			if ((mcu_ctrl_info[i].ctrl_id == 0x9a0926) || (mcu_ctrl_info[i].ctrl_id == 0x9a092b))
 			{
 				/*
 				 * We know that the MCU would fail when we
