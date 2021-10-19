@@ -138,6 +138,10 @@
 	status = "disabled";
 };
 
+&ov5640_mipi2 {
+	status = "disabled";
+};
+
 &i2c2 {
 	ov2311_mipi1: ov2311_mipi1@42 {
 		status = "okay";
@@ -162,9 +166,38 @@
        };
 };
 
+&i2c4 {
+	ov2311_mipi2: ov2311_mipi2@42 {
+		status = "okay";
+		compatible = "ov2311";
+		reg = <0x42>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi2>;
+		clocks = <&clk IMX8MQ_CLK_CLKO2>;
+		clock-names = "csi_mclk";
+		csi_id = <1>;
+	    mipi-data-lanes = <2>;
+		camera-mipi-clk = <832>;
+		pwn-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+		rst-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
+		mclk = <24000000>;
+		mclk_source = <0>;
+		port {
+			ov2311_mipi2_ep: endpoint {
+				remote-endpoint = <&mipi2_sensor_ep>;
+			};
+		};
+       };
+};
+
         
 &mipi1_sensor_ep {
 		remote-endpoint = <&ov2311_mipi1_ep>;
+	data-lanes = <1 2>;
+};
+
+&mipi2_sensor_ep {
+		remote-endpoint = <&ov2311_mipi2_ep>;
 	data-lanes = <1 2>;
 };
 
@@ -173,6 +206,15 @@
 	ov2311-csi-bridge;
 };
 
+&mipi_csi_2 {
+	assigned-clock-rates = <266000000>, <250000000>, <66000000>;
+	ov2311-csi-bridge;
+};
+
 &csi1_bridge {
+	ov2311-csi-bridge;
+};
+
+&csi2_bridge {
 	ov2311-csi-bridge;
 };
