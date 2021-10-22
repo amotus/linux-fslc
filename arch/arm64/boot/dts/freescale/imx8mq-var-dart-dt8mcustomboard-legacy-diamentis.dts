@@ -136,7 +136,7 @@
 	status = "disabled";
 };
 
-/*
+
 &i2c2 {
 	ov2311_mipi1: ov2311_mipi1@42 {
 		status = "okay";
@@ -160,7 +160,7 @@
 		};
        };
 };
-*/
+
 &i2c4 {
 	ov2311_mipi2: ov2311_mipi2@42 {
 		status = "okay";
@@ -185,31 +185,31 @@
        };
 };
 
-/*        
+      
 &mipi1_sensor_ep {
 		remote-endpoint = <&ov2311_mipi1_ep>;
 	data-lanes = <1 2>;
 };
-*/
+
 &mipi2_sensor_ep {
 		remote-endpoint = <&ov2311_mipi2_ep>;
 	data-lanes = <1 2>;
 };
-/*
+
 &mipi_csi_1 {
 	assigned-clock-rates = <266000000>, <250000000>, <66000000>;
 	ov2311-mipi-csi;
 };
-*/
+
 &mipi_csi_2 {
 	assigned-clock-rates = <266000000>, <250000000>, <66000000>;
 	ov2311-mipi-csi;
 };
-/*
+
 &csi1_bridge {
 	ov2311-csi-bridge;
 };
-*/
+
 &csi2_bridge {
 	ov2311-csi-bridge;
 };
