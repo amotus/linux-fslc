@@ -198,12 +198,12 @@
 /*
 &mipi_csi_1 {
 	assigned-clock-rates = <266000000>, <250000000>, <66000000>;
-	ov2311-csi-bridge;
+	ov2311-mipi-csi;
 };
 */
 &mipi_csi_2 {
 	assigned-clock-rates = <266000000>, <250000000>, <66000000>;
-	ov2311-csi-bridge;
+	ov2311-mipi-csi;
 };
 /*
 &csi1_bridge {
