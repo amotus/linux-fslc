@@ -26,7 +26,7 @@
 #define ov2311_XCLK_MIN 6000000
 #define ov2311_XCLK_MAX 24000000
 
-#define VERSION "2.0"
+#define VERSION "3.0"
 
 #define ov2311_reg struct reg_16
 #define ov2311_TABLE_WAIT_MS	0

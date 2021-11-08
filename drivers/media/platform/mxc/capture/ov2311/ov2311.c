@@ -2482,6 +2482,73 @@ static int mcu_isp_stream_on(struct i2c_client *client)
 	return err;
 }
 
+
+static int mcu_isp_stream_off(struct i2c_client *client)
+{
+    unsigned char mc_data[100];
+	uint32_t payload_len = 0;
+
+	uint16_t cmd_status = 0;
+	uint8_t retcode = 0, cmd_id = 0;
+	int retry = 1000, err = 0;
+	pr_err("Func : %s Line : %u\n", __func__, __LINE__);
+	/*lock semaphore */
+	mutex_lock(&mcu_i2c_mutex);
+	/* First Txn Payload length = 0 */
+	payload_len = 0;
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STREAM_OFF;
+	mc_data[2] = payload_len >> 8;
+	mc_data[3] = payload_len & 0xFF;
+	mc_data[4] = errorcheck(&mc_data[2], 2);
+
+	ov2311_write(client, mc_data, TX_LEN_PKT);
+
+	mc_data[0] = CMD_SIGNATURE;
+	mc_data[1] = CMD_ID_STREAM_OFF;
+	err = ov2311_write(client, mc_data, 2);
+	if (err != 0) {
+		dev_err(&client->dev, " %s(%d) Error - %d \n",
+			__func__, __LINE__, err);
+		goto exit;
+	}
+
+	while (--retry > 0) {
+		msleep(20);
+		cmd_id = CMD_ID_STREAM_OFF;
+		if (mcu_get_cmd_status(client, &cmd_id, &cmd_status, &retcode) <
+		    0) {
+			dev_err(&client->dev, " %s(%d) Error \n",
+				__func__, __LINE__);
+			err = -EIO;
+			goto exit;
+		}
+
+		if ((cmd_status == MCU_CMD_STATUS_SUCCESS) &&
+		    ((retcode == ERRCODE_SUCCESS) || retcode == ERRCODE_ALREADY)) {
+			err = 0;
+			goto exit;
+		}
+
+		if ((retcode != ERRCODE_BUSY) &&
+		    ((cmd_status != MCU_CMD_STATUS_PENDING))) {
+			dev_err(&client->dev,
+				"(%s) %d Error STATUS = 0x%04x RET = 0x%02x\n",
+				__func__, __LINE__, cmd_status, retcode);
+			err = -EIO;
+			goto exit;
+		}
+
+	}
+
+	err = -ETIMEDOUT;
+ exit:
+	/* unlock semaphore */
+	mutex_unlock(&mcu_i2c_mutex);
+	return err;
+}
+
 static int mcu_isp_power_down(struct i2c_client *client)
 {
 	uint32_t payload_len = 0;
@@ -3378,16 +3445,28 @@ static int ov2311_s_stream(struct v4l2_subdev *sd, int enable)
 		retries = retries_for_i2c_commands * 2;
 	if (!enable) {
 		/* Perform Stream Off Sequence - if any */
-	}
+		err = RETRY_SEQUENCE(
+				retries,
+				mcu_isp_stream_off(client)
+				);
+		if (err < 0)
+		{
+			dev_err(&client->dev, "%s: Failed Stream off\n", __func__);
+			return err;
+		}
 
-	err = RETRY_SEQUENCE(
-			retries,
-			mcu_isp_stream_on(client)
-			);
-	if (err < 0)
+	}else
 	{
-		dev_err(&client->dev, "%s: Failed Stream on\n", __func__);
-		return err;
+
+		err = RETRY_SEQUENCE(
+				retries,
+				mcu_isp_stream_on(client)
+				);
+		if (err < 0)
+		{
+			dev_err(&client->dev, "%s: Failed Stream on\n", __func__);
+			return err;
+		}
 	}
 
 	/* Perform Stream On Sequence - if any  */
