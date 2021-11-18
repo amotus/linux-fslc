@@ -160,10 +160,10 @@
 		};
        };
 };
-/*
+
 &i2c4 {
 	ov2311_mipi2: ov2311_mipi2@42 {
-		status = "okay";
+		status = "disabled";
 		compatible = "ov2311";
 		reg = <0x42>;
 		pinctrl-names = "default";
@@ -184,7 +184,6 @@
 		};
        };
 };
-*/
 
 &mipi1_sensor_ep {
 		remote-endpoint = <&ov2311_mipi1_ep>;
