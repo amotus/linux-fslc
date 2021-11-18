@@ -20,15 +20,15 @@
 };
 
 /*
-* Enable rpmsg
-*/
+ * Enable rpmsg
+ */
 &rpmsg {
 	status = "okay";
 };
 
 /*
-* Enable i2C3 because imx8mq-var-dart-dt8mcustomboard-m4.dtsi disables it
-*/
+ * Enable i2C3 because imx8mq-var-dart-dt8mcustomboard-m4.dtsi disables it
+ */
 &i2c3 {
 	status = "okay";
 };
@@ -147,7 +147,7 @@
 		clocks = <&clk IMX8MQ_CLK_CLKO2>;
 		clock-names = "csi_mclk";
 		csi_id = <0>;
-	    mipi-data-lanes = <2>;
+		mipi-data-lanes = <2>;
 		camera-mipi-clk = <832>;
 		pwn-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
 		rst-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
@@ -171,7 +171,7 @@
 		clocks = <&clk IMX8MQ_CLK_CLKO2>;
 		clock-names = "csi_mclk";
 		csi_id = <1>;
-	    mipi-data-lanes = <2>;
+		mipi-data-lanes = <2>;
 		camera-mipi-clk = <832>;
 		pwn-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
 		rst-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
