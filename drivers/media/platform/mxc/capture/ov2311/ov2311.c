@@ -4332,6 +4332,16 @@ static int ov2311_remove(struct i2c_client *client)
 	return 0;
 }
 
+#ifdef CONFIG_OF
+static const struct of_device_id ov2311_of_match[] = {
+	{ .compatible = "ovti,ov2311",
+	},
+	{ /* sentinel */ }
+};
+
+MODULE_DEVICE_TABLE(of, ov2311_of_match);
+#endif
+
 static const struct i2c_device_id ov2311_id[] = {
 	{"ov2311", 0},
 	{}
@@ -4342,7 +4352,10 @@ MODULE_DEVICE_TABLE(i2c, ov2311_id);
 static struct i2c_driver ov2311_i2c_driver = {
 	.driver = {
 		   .name = "ov2311",
-		   .owner = THIS_MODULE
+		   .owner = THIS_MODULE,
+#ifdef CONFIG_OF
+                   .of_match_table = of_match_ptr(ov2311_of_match),
+#endif
 	},
 	.probe = ov2311_probe,
 	.remove = ov2311_remove,

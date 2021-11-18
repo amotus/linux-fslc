@@ -140,7 +140,7 @@
 &i2c2 {
 	ov2311_mipi1: ov2311_mipi1@42 {
 		status = "okay";
-		compatible = "ov2311";
+		compatible = "ovti,ov2311";
 		reg = <0x42>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_csi1>;
@@ -164,7 +164,7 @@
 &i2c4 {
 	ov2311_mipi2: ov2311_mipi2@42 {
 		status = "disabled";
-		compatible = "ov2311";
+		compatible = "ovti,ov2311";
 		reg = <0x42>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_csi2>;
